@@ -339,7 +339,7 @@ versions() {
         fi
         if [[ ${SILENT} = false && "${ZIGBEE_BRANCH}" = "Development" ]]; then
             echo; echo; echo -e "${GREEN_DARK}Note: the development Zigbee libraries may not yet be compatible with the current openHAB Zigbee binding"
-            echo -e "or bridges. Enter the requested version of the development ZSmartSystems libraries [clear field to exit]${NC}"; echo
+            echo -e "or bridges. Enter the requested version of the development ZSmartSystems libraries [clear field to exit]${NC}"
             read -e -p "[Use backspace to modify, enter to accept. The latest development version is ${ZSMARTSYSTEMS_VERSION}.] " -i "${ZSMARTSYSTEMS_VERSION}" ZSMARTSYSTEMS_VERSION
             if [[ -z "${ZSMARTSYSTEMS_VERSION}" ]]; then
                 exit
