@@ -10,7 +10,7 @@ introText() {
     echo; echo -e "${GREEN_DARK}This script is capable of downloading and manually installing the latest development or master branch builds of the Z-Wave and Zigbee bindings, and/or the openhab-transport-serial"
     echo "feature. The script must reside inside the addons folder and be executed on the machine running OH. Before a binding is installed, any previous versions will be"
     echo "uninstalled. Any manually installed versions will also be backed up by moving them to addons/archive. The installation of any binding will also include the installation"
-    echo "of the opemnhab-serial-transport feature. After using this script, you can uninstall the bindings by deleting their jars from addons or you can use this script.${NC}"
+    echo "of the opemnhab-transport-serial feature. After using this script, you can uninstall the bindings by deleting their jars from addons or you can use this script.${NC}"
     echo; echo -e "${BLINKING}!!!!!${GREY_RED} If you have manually added the Zigbee or Z-Wave binding to your addons.cfg file, they must be removed from the file or the old version will reinstall ${BLINKING}!!!!!${NC}"
 }
 SILENT=false
