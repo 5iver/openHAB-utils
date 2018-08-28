@@ -93,7 +93,7 @@ for WORD; do
             fi;;
         --HELP)
             introText; echo
-            echo -e "${BLUE_DARK}Usage: ./zzManualInstaller.sh [OPTION]...${NC}"; echo
+            echo -e "${BLUE_DARK}Usage: zzManualInstaller.sh [OPTION]...${NC}"; echo
             echo -e "${BLUE_DARK}If executed without the ACTION argument, menus will be displayed for each option${NC}"; echo
             echo -e "    --ACTION                  ${BLUE_DARK}Accepted values: zigbee, zwave, both. Specify which bindings to install/upgrade.${NC}"
             echo -e "    --ZWAVE_BRANCH            ${BLUE_DARK}Accepted values: development, master. Default: master. Specify the development or master branch for Z-Wave.${NC}"

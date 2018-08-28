@@ -19,7 +19,7 @@ of the opemnhab-serial-transport feature. After using this script, you can unins
 
 !!!!! If you have manually added the Zigbee or Z-Wave binding to your addons.cfg file, they must be removed from the file or the old version will reinstall !!!!!
 
-Usage: ./zzManualInstaller.sh [OPTION]...
+Usage: zzManualInstaller.sh [OPTION]...
 
 If executed without the ACTION argument, menus will be displayed for each option
 
