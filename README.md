@@ -2,7 +2,7 @@
 Utilizes for use with [openHAB](https://www.openhab.org/)
 
 ### [Zigbee and Z-Wave manual install](https://github.com/openhab-5iver/openHAB-utils/tree/master/Zigbee%20and%20Z-Wave%20manual%20install) (BASH)
-  This script is interactive and will prompt for input. It requires to be executed from the /addons directory on the openHAB server, using the same account that runs openHAB. After downloading, be sure to set the permissions so that it can be executed (`chmod u+x zzManualInstall.sh`), or run it with `bash zzManualInstall.sh`. At this time, there is very little error checking in the case of a failure in the script, so you should verify that it has run successfully when it completes, i.e. run `list -s | grep -i zig` in Karaf. This script can:
+  This script is interactive and will prompt for input. It requires to be executed from the addons directory on the openHAB server, using the same account that runs openHAB. After downloading, be sure to set the permissions so that it can be executed (`chmod u+x zzManualInstall.sh`), or run it with `bash zzManualInstall.sh`. At this time, there is very little error checking in the case of a failure in the script, so you should verify that it has run successfully when it completes, i.e. run `list -s | grep -i zig` in Karaf. This script can:
   * Download and manually install/upgrade the current snapshot or development Zigbee binding, with a chosen version of the [ZsmartSystems libraries](https://github.com/zsmartsystems/com.zsmartsystems.zigbee)
   * Download and manually install/upgrade the snapshot or development version of the [Z-Wave binding](https://github.com/openhab/org.openhab.binding.zwave/tree/development)
   * Uninstall existing versions of the bindings. If they were manually installed, the jars are first backed up.
@@ -14,8 +14,8 @@ Here is the output of `zzManualInstal.sh --help`...
 ```
 This script is capable of downloading and manually installing the latest development or master branch builds of the Z-Wave and Zigbee bindings, and/or the openhab-transport-serial
 feature. The script must reside inside the addons folder and be executed on the machine running OH. Before a binding is installed, any previous versions will be
-uninstalled. Any manually installed versions will also be backed up by moving them to /addons/archive. The installation of any binding will also include the installation
-of the opemnhab-serial-transport feature. After using this script, you can uninstall the bindings by deleting their jars from /addons or you can use this script.
+uninstalled. Any manually installed versions will also be backed up by moving them to addons/archive. The installation of any binding will also include the installation
+of the opemnhab-serial-transport feature. After using this script, you can uninstall the bindings by deleting their jars from addons or you can use this script.
 
 !!!!! If you have manually added the Zigbee or Z-Wave binding to your addons.cfg file, they must be removed from the file or the old version will reinstall !!!!!
 
