@@ -10,7 +10,7 @@ Utilizes for use with [openHAB](https://www.openhab.org/)
   
   If you would prefer to not use the menu driven interface, you can use it from the commandline. This is useful if you would like to execute it from a rule. Currently, only installs/upgrades can be performed when running from commandline. 
   
-Here is the output of zzManualInstal.sh --help...
+Here is the output of `zzManualInstal.sh --help`...
 ```
 This script is capable of downloading and manually installing the latest development or master branch builds of the Z-Wave and Zigbee bindings, and/or the openhab-transport-serial
 feature. The script must reside inside the addons folder and be executed on the machine running OH. Before a binding is installed, any previous versions will be
