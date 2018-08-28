@@ -6,7 +6,7 @@ Utilizes for use with [openHAB](https://www.openhab.org/)
   * Download and manually install/upgrade the current snapshot or development Zigbee binding, with a chosen version of the [ZsmartSystems libraries](https://github.com/zsmartsystems/com.zsmartsystems.zigbee)
   * Download and manually install/upgrade the snapshot or development version of the [Z-Wave binding](https://github.com/openhab/org.openhab.binding.zwave/tree/development)
   * Uninstall existing versions of the bindings. If they were manually installed, the jars are first backed up.
-  * Install the serial transport
+  * Install openhab-serial-transport
   
   If you would prefer to not use the menu driven interface, you can use it from the commandline. This is useful if you would like to execute it from a rule. Currently, only installs/upgrades can be performed when running from commandline. 
   
