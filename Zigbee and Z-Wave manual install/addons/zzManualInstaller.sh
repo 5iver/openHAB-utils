@@ -237,7 +237,7 @@ karaf() {
     if [[ "${ACTION}" =~ "Z-Wave" || "${ACTION}" =~ "both" ]]; then
         KARAF_FUNCTION="${KARAF_FUNCTION} bundle:uninstall org.openhab.binding.zwave;"
     fi
-    if [[ "${ACTION}" =~ "nstall" ]]; then
+    if [[ "${ACTION}" =~ "Install" ]]; then
         KARAF_FUNCTION="${KARAF_FUNCTION} feature:install openhab-transport-serial;"
     fi
     KARAF_FUNCTION="${KARAF_FUNCTION} logout;"
@@ -297,7 +297,7 @@ summary() {
 versions() {
     if [[ ${SILENT} = false ]]; then
         if [[ "${ACTION}" = "Install or upgrade Z-Wave binding" || "${ACTION}" = "Install or upgrade both bindings" ]]; then
-            echo; echo; echo -e "${GREEN_DARK}From which branch would you like the Z-Wave binding downloaded from? Snapshots are in Master.${NC}"
+            echo; echo; echo -e "Z-Wave binding: ${GREEN_DARK}from which branch would you like to download from? Snapshots are in Master.${NC}"
             select ZWAVE_BRANCH in "Development" "Master" "Exit"; do
                 case $ZWAVE_BRANCH in
                     "Development" ) break;;
@@ -312,7 +312,7 @@ versions() {
 
     if [[ ${SILENT} = false ]]; then
         if [[ "${ACTION}" = "Install or upgrade Zigbee binding" || "${ACTION}" = "Install or upgrade both bindings" ]]; then
-            echo; echo; echo -e "${GREEN_DARK}From which branch would you like the Zigbee binding downloaded from? Snapshots are in Master.${NC}"
+            echo; echo; echo -e "Zigbee binding: ${GREEN_DARK}From which branch would you like to download from? Snapshots are in Master.${NC}"
             select ZIGBEE_BRANCH in "Development" "Master" "Exit"; do
                 case $ZIGBEE_BRANCH in
                     "Development" ) break;;
