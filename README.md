@@ -34,3 +34,6 @@ If executed without the ACTION argument, menus will be displayed for each option
 Here is how to install/upgrade the development Z-Wave binding from commandline...
 
     bash zzManualInstall.sh --ACTION zwave --ZWAVE_BRANCH development
+
+### [Backup and upgrade manual installation](https://github.com/openhab-5iver/openHAB-utils/tree/master/Backup%20and%20upgrade%20manual%20installation)
+  This script is interactive and will prompt for input. It will performa a full backup of a manual installation (single directory), and then perform an upgrade. This may be obsolete, since there are official backup and restore scripts, but I haven't looked through them yet.
