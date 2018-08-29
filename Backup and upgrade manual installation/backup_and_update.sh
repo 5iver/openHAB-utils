@@ -37,6 +37,7 @@ UNZIP_DIR="${DOWNLOAD_DIR}/${BUILD_NUMBER}/UNZIP_DIR"
 
 mkdir -p "${BACKUP_DIR_FULL}"
 mkdir -p "${UNZIP_DIR}"
+mkdir -p "${BACKUP_DIR}/_zwavelogs"
 
 # download latest snapshot
 echo; echo -e "${GREEN_DARK}Downloading latest jar...${NC}"
@@ -45,7 +46,7 @@ curl -s --connect-timeout 10 --max-time 60 -o "${FILE_NAME}" "https://openhab.ci
 # move last zwave log to archive directory
 if [ -n "${OPENHAB_DIR}/userdata/logs/zwave/zwave.log" ]; then
     current_time=$(date "+%Y%m%d%H%M%S")
-    mv "${OPENHAB_DIR}/userdata/logs/zwave/zwave.log" "/home/archive/_zwavelogs/zwave.log.${current_time}"
+    mv "${OPENHAB_DIR}/userdata/logs/zwave/zwave.log" "${BACKUP_DIR}/_zwavelogs/zwave.log.${current_time}"
 fi
 
 # backup current installation with settings
