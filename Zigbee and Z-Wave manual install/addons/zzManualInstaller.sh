@@ -125,7 +125,7 @@ installUninstall() {
         ZWAVE_UNINSTALLED=false
         while [[ ${ZIGBEE_UNINSTALLED} = false && ${ZWAVE_UNINSTALLED} = false ]]; do
             if [[ ${ZIGBEE_UNINSTALLED} = false && "${ACTION}" =~ "Zigbee" ]]; then
-                ZIGBEE_CHECK=$(curl -s --connect-timeout 10 -m 10 -X GET --header "Accept: application/json" "http://localhost:8080/rest/bindings/zigbee/config")
+                ZIGBEE_CHECK=$(curl -s --connect-timeout 10 --max-time 10 -X GET --header "Accept: application/json" "http://localhost:8080/rest/bindings/zigbee/config")
                 if [[ -z "${ZIGBEE_CHECK}" ]]; then #"${ZIGBEE_CHECK}" = "{}" || 
                     ZIGBEE_UNINSTALLED=true
                 elif [[ ${COUNT} -gt 24 ]]; then
@@ -138,7 +138,7 @@ installUninstall() {
                 ZIGBEE_UNINSTALLED=true
             fi
             if [[ ${ZWAVE_UNINSTALLED} = false && "${ACTION}" =~ "Z-Wave" ]]; then
-                ZWAVE_CHECK=$(curl -s --connect-timeout 10 -m 10 -X GET --header "Accept: application/json" "http://localhost:8080/rest/bindings/zwave/config")
+                ZWAVE_CHECK=$(curl -s --connect-timeout 10 --max-time 10 -X GET --header "Accept: application/json" "http://localhost:8080/rest/bindings/zwave/config")
                 if [[ -z "${ZWAVE_CHECK}" ]]; then #"${ZWAVE_CHECK}" = "{}" || 
                     ZWAVE_UNINSTALLED=true
                 elif [[ ${COUNT} -gt 24 ]]; then
@@ -168,17 +168,17 @@ installUninstall() {
                 mkdir -p ${ADDONS}/archive/staging/zigbee
                 cd ${ADDONS}/archive/staging/zigbee
 
-                wget -q --no-use-server-timestamps https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee-${ZSMARTSYSTEMS_VERSION}.jar
-                wget -q --no-use-server-timestamps https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.xbee/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.xbee-${ZSMARTSYSTEMS_VERSION}.jar
-                wget -q --no-use-server-timestamps https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.ember/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.ember-${ZSMARTSYSTEMS_VERSION}.jar
-                wget -q --no-use-server-timestamps https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.telegesis/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.telegesis-${ZSMARTSYSTEMS_VERSION}.jar
-                wget -q --no-use-server-timestamps https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.cc2531/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.cc2531-${ZSMARTSYSTEMS_VERSION}.jar
+                curl -s --connect-timeout 10 --max-time 60 https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee-${ZSMARTSYSTEMS_VERSION}.jar
+                curl -s --connect-timeout 10 --max-time 60 https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.xbee/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.xbee-${ZSMARTSYSTEMS_VERSION}.jar
+                curl -s --connect-timeout 10 --max-time 60 https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.ember/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.ember-${ZSMARTSYSTEMS_VERSION}.jar
+                curl -s --connect-timeout 10 --max-time 60 https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.telegesis/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.telegesis-${ZSMARTSYSTEMS_VERSION}.jar
+                curl -s --connect-timeout 10 --max-time 60 https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.cc2531/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.cc2531-${ZSMARTSYSTEMS_VERSION}.jar
 
-                wget -q --no-use-server-timestamps https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.cc2531/artifact/org.openhab.binding/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-SNAPSHOT.jar
-                wget -q --no-use-server-timestamps https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.ember/artifact/org.openhab.binding/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.ember-${OH_VERSION}-SNAPSHOT.jar
-                wget -q --no-use-server-timestamps https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.telegesis/artifact/org.openhab.binding/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-SNAPSHOT.jar
-                wget -q --no-use-server-timestamps https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.xbee/artifact/org.openhab.binding/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.xbee-${OH_VERSION}-SNAPSHOT.jar
-                wget -q --no-use-server-timestamps https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee/artifact/org.openhab.binding/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee-${OH_VERSION}-SNAPSHOT.jar
+                curl -s --connect-timeout 10 --max-time 60 https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.cc2531/artifact/org.openhab.binding/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-SNAPSHOT.jar
+                curl -s --connect-timeout 10 --max-time 60 https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.ember/artifact/org.openhab.binding/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.ember-${OH_VERSION}-SNAPSHOT.jar
+                curl -s --connect-timeout 10 --max-time 60 https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.telegesis/artifact/org.openhab.binding/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-SNAPSHOT.jar
+                curl -s --connect-timeout 10 --max-time 60 https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.xbee/artifact/org.openhab.binding/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.xbee-${OH_VERSION}-SNAPSHOT.jar
+                curl -s --connect-timeout 10 --max-time 60 https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee/artifact/org.openhab.binding/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee-${OH_VERSION}-SNAPSHOT.jar
             fi
         fi
         if [[ "${ACTION}" =~ "Z-Wave" || "${ACTION}" =~ "both" ]]; then
@@ -195,9 +195,9 @@ installUninstall() {
                 mkdir -p ${ADDONS}/archive/staging/zwave
                 cd ${ADDONS}/archive/staging/zwave
                 if [[ "${ZWAVE_BRANCH}" = "Development" ]]; then
-                    wget -q --no-use-server-timestamps http://www.cd-jackson.com/downloads/openhab2/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar
+                    curl -s --connect-timeout 10 --max-time 60 http://www.cd-jackson.com/downloads/openhab2/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar
                 else
-                    wget -q --no-use-server-timestamps https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zwave/artifact/org.openhab.binding/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar
+                    curl -s --connect-timeout 10 --max-time 60 https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zwave/artifact/org.openhab.binding/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar
                 fi
             fi
         fi
@@ -327,15 +327,16 @@ versions() {
 
     if [[ "${ACTION}" =~ "Install or upgrade" ]]; then
         #OH_VERSION=$(wget -nv -q -O- 'https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding$org.openhab.binding.zigbee/console' | grep -a "Building ZigBee Binding" | grep -aoP "[0-9].*[0-9]")
-        OH_VERSION=$(curl -s --connect-timeout 10 -m 10 'https://openhab.ci.cloudbees.com/job/openHAB-Distribution/lastSuccessfulBuild/consoleText' | grep -a "Building openHAB Distribution" | head -n1 | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
+        OH_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.ci.cloudbees.com/job/openHAB-Distribution/lastSuccessfulBuild/console" | grep -a "Building openHAB Distribution" | head -n1 | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
+
     fi
 
     if [[ -z "${ZSMARTSYSTEMS_VERSION}" && ("${ACTION}" = "Install or upgrade Zigbee binding" || "${ACTION}" = "Install or upgrade both bindings") ]]; then
         if [[ "${ZIGBEE_BRANCH}" = "Master" ]]; then
-            ZSMARTSYSTEMS_VERSION=$(curl -s --connect-timeout 10 -m 10 'https://raw.githubusercontent.com/openhab/openhab-distro/master/features/addons/src/main/feature/feature.xml' | grep -a "com.zsmartsystems.zigbee.dongle.ember" | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
+            ZSMARTSYSTEMS_VERSION=$(curl -s --connect-timeout 10 --max-time 10 'https://raw.githubusercontent.com/openhab/openhab-distro/master/features/addons/src/main/feature/feature.xml' | grep -a "com.zsmartsystems.zigbee.dongle.ember" | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
         else
             #ZSMARTSYSTEMS_VERSION=$(wget -nv -q -O- 'https://bintray.com/zsmartsystems/com.zsmartsystems/zigbee/_latestVersion' | grep -oP "[0-9].*[0-9]$")
-            ZSMARTSYSTEMS_VERSION=$(curl -Ls --connect-timeout 10 -m 10 -o /dev/null -w %{url_effective} 'https://bintray.com/zsmartsystems/com.zsmartsystems/zigbee/_latestVersion' | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
+            ZSMARTSYSTEMS_VERSION=$(curl -Ls --connect-timeout 10 --max-time 10 -o /dev/null -w %{url_effective} 'https://bintray.com/zsmartsystems/com.zsmartsystems/zigbee/_latestVersion' | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
         fi
         if [[ ${SILENT} = false && "${ZIGBEE_BRANCH}" = "Development" ]]; then
             echo; echo; echo -e "${GREEN_DARK}Note: the development Zigbee libraries may not yet be compatible with the current openHAB Zigbee binding"
