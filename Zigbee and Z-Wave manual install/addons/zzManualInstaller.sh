@@ -195,9 +195,9 @@ installUninstall() {
                 mkdir -p ${ADDONS}/archive/staging/zwave
                 cd ${ADDONS}/archive/staging/zwave
                 if [[ "${ZWAVE_BRANCH}" = "Development" ]]; then
-                    curl -s --connect-timeout 10 --max-time 60 -O "http://www.cd-jackson.com/downloads/openhab2/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
+                    curl -s --connect-timeout 10 --max-time 60 -O -L "http://www.cd-jackson.com/downloads/openhab2/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
                 else
-                    curl -s --connect-timeout 10 --max-time 60 -O "https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zwave/artifact/org.openhab.binding/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
+                    curl -s --connect-timeout 10 --max-time 60 -O -L "https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zwave/artifact/org.openhab.binding/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
                 fi
             fi
         fi
