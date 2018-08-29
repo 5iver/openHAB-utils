@@ -326,16 +326,16 @@ versions() {
     fi
 
     if [[ "${ACTION}" =~ "Install or upgrade" ]]; then
-        #OH_VERSION=$(wget -nv -q -O- 'https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding$org.openhab.binding.zigbee/console' | grep "Building ZigBee Binding" | grep -oP "[0-9].*[0-9]")
-        OH_VERSION=$(curl -s --connect-timeout 10 -m 10 'https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.core$pom/console' | grep "Building openHAB" | grep -oP "[0-9].*[0-9]")
+        #OH_VERSION=$(wget -nv -q -O- 'https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding$org.openhab.binding.zigbee/console' | grep -a "Building ZigBee Binding" | grep -aoP "[0-9].*[0-9]")
+        OH_VERSION=$(curl -s --connect-timeout 10 -m 10 'https://openhab.ci.cloudbees.com/job/openHAB-Distribution/lastSuccessfulBuild/consoleText' | grep -a "Building openHAB Distribution" | head -n1 | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
     fi
 
     if [[ -z "${ZSMARTSYSTEMS_VERSION}" && ("${ACTION}" = "Install or upgrade Zigbee binding" || "${ACTION}" = "Install or upgrade both bindings") ]]; then
         if [[ "${ZIGBEE_BRANCH}" = "Master" ]]; then
-            ZSMARTSYSTEMS_VERSION=$(curl -s --connect-timeout 10 -m 10 'https://raw.githubusercontent.com/openhab/openhab-distro/master/features/addons/src/main/feature/feature.xml' | grep "com.zsmartsystems.zigbee.dongle.ember" | grep -oP "[0-9]+\.[0-9]+\.[0-9]+")
+            ZSMARTSYSTEMS_VERSION=$(curl -s --connect-timeout 10 -m 10 'https://raw.githubusercontent.com/openhab/openhab-distro/master/features/addons/src/main/feature/feature.xml' | grep -a "com.zsmartsystems.zigbee.dongle.ember" | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
         else
             #ZSMARTSYSTEMS_VERSION=$(wget -nv -q -O- 'https://bintray.com/zsmartsystems/com.zsmartsystems/zigbee/_latestVersion' | grep -oP "[0-9].*[0-9]$")
-            ZSMARTSYSTEMS_VERSION=$(curl -Ls --connect-timeout 10 -m 10 -o /dev/null -w %{url_effective} 'https://bintray.com/zsmartsystems/com.zsmartsystems/zigbee/_latestVersion' | grep -oP "[0-9]+\.[0-9]+\.[0-9]+$")
+            ZSMARTSYSTEMS_VERSION=$(curl -Ls --connect-timeout 10 -m 10 -o /dev/null -w %{url_effective} 'https://bintray.com/zsmartsystems/com.zsmartsystems/zigbee/_latestVersion' | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
         fi
         if [[ ${SILENT} = false && "${ZIGBEE_BRANCH}" = "Development" ]]; then
             echo; echo; echo -e "${GREEN_DARK}Note: the development Zigbee libraries may not yet be compatible with the current openHAB Zigbee binding"
