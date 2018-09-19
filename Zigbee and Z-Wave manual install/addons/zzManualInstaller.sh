@@ -327,7 +327,7 @@ versions() {
 
     if [[ "${ACTION}" =~ "Install or upgrade" ]]; then
         #OH_VERSION=$(wget -nv -q -O- 'https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding$org.openhab.binding.zigbee/console' | grep -a "Building ZigBee Binding" | grep -aoP "[0-9].*[0-9]")
-        OH_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.ci.cloudbees.com/job/openHAB-Distribution/lastSuccessfulBuild/console" | grep -a "Building openHAB Distribution" | head -n1 | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
+        OH_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.ci.cloudbees.com/job/openHAB-Distribution/lastSuccessfulBuild/console" | grep -a "Building openHAB" | head -n1 | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
 
     fi
 
