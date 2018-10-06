@@ -107,6 +107,11 @@ while [[ -h "$SOURCE" ]]; do # resolve SOURCE until the file is no longer a syml
 done
 ADDONS="$( cd -P "$( dirname "$SOURCE" )" >/dev/null && pwd )"
 
+if [ ! -f ../runtime/bin/client ]; then
+    echo -e "${GREY_RED}This script must be copied to the \$OPENHAB_HOME/addons directory before running it${NC}"
+    echo; exit
+fi
+
 installUninstall() {
     if [[ !("${ACTION}" =~ "transport") ]]; then
         echo; echo -e ${BLUE_DARK}"Waiting for the uninstallation of previous versions to complete..."${NC}
