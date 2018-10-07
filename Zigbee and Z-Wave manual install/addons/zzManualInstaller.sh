@@ -82,15 +82,6 @@ for WORD; do
                 echo -e "${GREY_RED}ZSMARTSYSTEMS_VERSION argument specified without a value${NC}"
                 echo; exit
             fi;;
-        --KARAF_ACCOUNT)
-            if [[ "${2:0:1}" != "-" && "${2:0:1}" != "" ]]; then
-                KARAF_ACCOUNT=$2
-                shift 2
-                #echo "KARAF_ACCOUNT=${KARAF_ACCOUNT}"
-            else
-                echo -e "${GREY_RED}KARAF_ACCOUNT argument specified without a value${NC}"
-                echo; exit
-            fi;;
         --HELP)
             introText; echo
             echo -e "${BLUE_DARK}Usage: zzManualInstaller.sh [OPTION]...${NC}"; echo
@@ -99,7 +90,6 @@ for WORD; do
             echo -e "    --ZWAVE_BRANCH            ${BLUE_DARK}Accepted values: development, master. Default: master. Specify the development or master branch for Z-Wave.${NC}"
             echo -e "    --ZIGBEE_BRANCH           ${BLUE_DARK}Accepted values: development, master. Default: master. Specify the development or master branch for Zigbee.${NC}"
             echo -e "    --ZSMARTSYSTEMS_VERSION   ${BLUE_DARK}Default: latest version, based on selected branch. Specify the version of the ZSmartSystems libraries.${NC}"
-            echo -e "    --KARAF_ACCOUNT           ${BLUE_DARK}Default: ${NC}openhab${BLUE_DARK}. Specify an account for the Karaf SSH login.${NC}"
             echo -e "    --HELP                    ${BLUE_DARK}Display this help and exit${NC}"; echo
             echo; exit;;
         --*) echo -e "${GREY_RED}Unrecognized argument: ${WORD}${NC}"
@@ -116,6 +106,11 @@ while [[ -h "$SOURCE" ]]; do # resolve SOURCE until the file is no longer a syml
     [[ $SOURCE != /* ]] && SOURCE="$ADDONS/$SOURCE" # if SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
 done
 ADDONS="$( cd -P "$( dirname "$SOURCE" )" >/dev/null && pwd )"
+
+if [ ! -f ../runtime/bin/client ]; then
+    echo -e "${GREY_RED}This script must be copied to the \$OPENHAB_HOME/addons directory before running it${NC}"
+    echo; exit
+fi
 
 installUninstall() {
     if [[ !("${ACTION}" =~ "transport") ]]; then
@@ -240,7 +235,6 @@ karaf() {
     if [[ "${ACTION}" =~ "Install" ]]; then
         KARAF_FUNCTION="${KARAF_FUNCTION} feature:install openhab-transport-serial;"
     fi
-    KARAF_FUNCTION="${KARAF_FUNCTION} logout;"
     #echo $KARAF_FUNCTION
     if [[ "${ACTION}" =~ "transport" ]]; then
         echo; echo -e ${BLUE_DARK}"Installing openhab-serial-transport..."${NC}
@@ -249,9 +243,9 @@ karaf() {
     else
         echo; echo -e ${BLUE_DARK}"Uninstalling binding(s)..."${NC}
     fi
-    echo; echo -e ${GREEN_DARK}"Reminder... the default Karaf SSH session password is${NC} habopen"
     #ssh -p 8101 -o StrictHostKeyChecking=no -l ${KARAF_ACCOUNT} localhost ${KARAF_FUNCTION}
-    ssh -p 8101 -l ${KARAF_ACCOUNT} localhost ${KARAF_FUNCTION}
+    # invoke the client command since we are running on localhost
+    ../runtime/bin/client ${KARAF_FUNCTION} --
     if [[ !("${ACTION}" =~ "transport") ]]; then
         echo -e ${GREEN_DARK}"An error here is normal, if one of the selected bindings was not previously installed...${NC}"
     fi
@@ -265,7 +259,6 @@ summary() {
     echo; echo -e "     ${BLACK_WHITE}*****     SUMMARY     *****${NC}     "; echo
     echo -e "${GREEN_DARK}Addons path:${NC} ${ADDONS}"
     echo -e "${GREEN_DARK}OH account:${NC} ${CURRENT_ACCOUNT}"
-    echo -e "${GREEN_DARK}Karaf account:${NC} ${KARAF_ACCOUNT}"
     echo -e "${GREEN_DARK}Requested action:${NC} ${ACTION}"
     if [[ "${ACTION}" =~ "Install or upgrade" ]]; then
         echo -e "${GREEN_DARK}Current OH snapshot version:${NC} ${OH_VERSION}"
@@ -350,18 +343,7 @@ versions() {
     summary
 }
 
-changeKarafAccount() {
-    echo; echo -e "${GREEN_DARK}Enter the modified Karaf account name [clear field to exit]${NC}"
-    read -e -p "[Use backspace to modify, enter to accept] " KARAF_ACCOUNT
-    if [[ -z "${KARAF_ACCOUNT}" ]]; then
-        exit
-    fi
-}
-
 menu() {
-    if [[ -z "${KARAF_ACCOUNT}" ]]; then
-        KARAF_ACCOUNT="openhab"
-    fi
     CURRENT_ACCOUNT=$(whoami)
     if [[ ${SILENT} = false ]]; then
         clear
@@ -390,17 +372,6 @@ menu() {
             esac
         done
 
-        echo; echo; echo -e ${GREEN_DARK}"This script will connect to the Karaf console via SSH to uninstall duplicate bindings and/or install openhab-serial-transport. If you have changed the default Karaf"
-        echo -e "SSH username, choose 'Change Account'. You will be prompted for the password when the script establishes the SSH session, unless the Karaf SSH server's public"
-        echo -e "key has already been added to the OH account's list of known hosts. The first time the script is run, if it is the first time establishing an SSH session to Karaf"
-        echo -e "from your OH server, you will be prompted with a warning that it is being permanently added to known hosts. The default account:password is${NC} openhab:habopen"
-        select choice in "Continue (my Karaf account is \"${KARAF_ACCOUNT}\")" "Select another account" "Exit"; do
-            case $choice in
-                "Continue (my Karaf account is \"${KARAF_ACCOUNT}\")" ) break;;
-                "Select another account" ) changeKarafAccount; break;;
-                "Exit" ) echo; exit;;
-            esac
-        done
     fi
     versions
 }
