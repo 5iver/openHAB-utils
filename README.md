@@ -2,7 +2,7 @@
 Utilities for use with [openHAB](https://www.openhab.org/)
 
 ### [Zigbee and Z-Wave manual install](https://github.com/openhab-5iver/openHAB-utils/tree/master/Zigbee%20and%20Z-Wave%20manual%20install) (BASH)
-  This script is interactive and will prompt for input. It requires to be executed from the addons directory on the openHAB server, using the same account that runs openHAB. After downloading, be sure to set the permissions so that it can be executed (`chmod u+x zzManualInstall.sh`), or run it with `bash zzManualInstall.sh`. At this time, there is very little error checking in the case of a failure in the script, so you should verify that it has run successfully when it completes, i.e. run `list -s | grep -i zig` in Karaf. This script can:
+  This script is interactive and will prompt for input. It requires to be executed from the addons directory on the openHAB server, **using the same account that runs openHAB**. After downloading, be sure to set the permissions so that it can be executed (`chmod u+x zzManualInstall.sh`), or run it with `bash zzManualInstall.sh`. At this time, there is very little error checking in the case of a failure in the script, so you should verify that it has run successfully when it completes, i.e. run `list -s | grep -i zig` in Karaf. This script can:
   * Download and manually install/upgrade the current snapshot or development Zigbee binding, with a chosen version of the [ZsmartSystems libraries](https://github.com/zsmartsystems/com.zsmartsystems.zigbee)
   * Download and manually install/upgrade the snapshot or development version of the [Z-Wave binding](https://github.com/openhab/org.openhab.binding.zwave/tree/development)
   * Uninstall existing versions of the bindings. If they were manually installed, the jars are first backed up.
@@ -27,7 +27,6 @@ If executed without the ACTION argument, menus will be displayed for each option
     --ZWAVE_BRANCH            Accepted values: development, master. Default: master. Specify the development or master branch for Z-Wave.
     --ZIGBEE_BRANCH           Accepted values: development, master. Default: master. Specify the development or master branch for Zigbee.
     --ZSMARTSYSTEMS_VERSION   Default: latest version, based on selected branch. Specify the version of the ZSmartSystems libraries.
-    --KARAF_ACCOUNT           Default: openhab. Specify an account for the Karaf SSH login.
     --HELP                    Display this help and exit
 ```
 
