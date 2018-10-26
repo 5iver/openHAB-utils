@@ -44,8 +44,8 @@ for WORD; do
         --ZWAVE_BRANCH)
             if [[ "${2:0:1}" != "-" && "${2:0:1}" != "" ]]; then
                 ZWAVE_BRANCH=$2
-                ZWAVE_BRANCH="${ZWAVE_BRANCH,,}"
-                ZWAVE_BRANCH="${ZWAVE_BRANCH[@]^}"
+                ZWAVE_BRANCH="${ZWAVE_BRANCH,,}"# lower case
+                ZWAVE_BRANCH="${ZWAVE_BRANCH[@]^}"# title case
                 if [[ "${ZWAVE_BRANCH}" = "Development" || "${ZWAVE_BRANCH}" = "Master" ]]; then
                     shift 2
                     #echo "ZWAVE_BRANCH=${ZWAVE_BRANCH,,}"
@@ -60,8 +60,8 @@ for WORD; do
         --ZIGBEE_BRANCH)
             if [[ "${2:0:1}" != "-" && "${2:0:1}" != "" ]]; then
                 ZIGBEE_BRANCH=$2
-                ZIGBEE_BRANCH="${ZIGBEE_BRANCH,,}"
-                ZIGBEE_BRANCH="${ZIGBEE_BRANCH[@]^}"
+                ZIGBEE_BRANCH="${ZIGBEE_BRANCH,,}"# lower case
+                ZIGBEE_BRANCH="${ZIGBEE_BRANCH[@]^}"# title case
                 if [[ "${ZIGBEE_BRANCH}" = "Development" || "${ZIGBEE_BRANCH}" = "Master" ]]; then
                     shift 2
                     #echo "ZIGBEE_BRANCH=${ZIGBEE_BRANCH,,}"
@@ -291,10 +291,11 @@ versions() {
     if [[ ${SILENT} = false ]]; then
         if [[ "${ACTION}" = "Install or upgrade Z-Wave binding" || "${ACTION}" = "Install or upgrade both bindings" ]]; then
             echo; echo; echo -e "Z-Wave binding: ${GREEN_DARK}from which branch would you like to download from? Snapshots are in Master.${NC}"
-            select ZWAVE_BRANCH in "Development" "Master" "Exit"; do
+                        echo -e "${RED_DARK}Note: DO NOT select Development unless Chris has specifically instructed you to do so!${NC}"
+            select ZWAVE_BRANCH in "Master" "Development" "Exit"; do
                 case $ZWAVE_BRANCH in
-                    "Development" ) break;;
                     "Master" ) break;;
+                    "Development" ) break;;
                     "Exit" ) exit; break;;
                 esac
             done
@@ -306,10 +307,10 @@ versions() {
     if [[ ${SILENT} = false ]]; then
         if [[ "${ACTION}" = "Install or upgrade Zigbee binding" || "${ACTION}" = "Install or upgrade both bindings" ]]; then
             echo; echo; echo -e "Zigbee binding: ${GREEN_DARK}From which branch would you like to download from? Snapshots are in Master.${NC}"
-            select ZIGBEE_BRANCH in "Development" "Master" "Exit"; do
+            select ZIGBEE_BRANCH in "Master" "Development" "Exit"; do
                 case $ZIGBEE_BRANCH in
-                    "Development" ) break;;
                     "Master" ) break;;
+                    "Development" ) break;;
                     "Exit" ) exit; break;;
                 esac
             done
