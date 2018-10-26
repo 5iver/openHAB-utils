@@ -291,7 +291,7 @@ versions() {
     if [[ ${SILENT} = false ]]; then
         if [[ "${ACTION}" = "Install or upgrade Z-Wave binding" || "${ACTION}" = "Install or upgrade both bindings" ]]; then
             echo; echo; echo -e "Z-Wave binding: ${GREEN_DARK}from which branch would you like to download from? Snapshots are in Master.${NC}"
-                        echo -e "${RED_DARK}Note: DO NOT select Development unless Chris has specifically instructed you to do so!${NC}"
+                        echo -e "${BLINKING}Note: DO NOT select Development unless Chris has specifically instructed you to do so!${NC}"
             select ZWAVE_BRANCH in "Master" "Development" "Exit"; do
                 case $ZWAVE_BRANCH in
                     "Master" ) break;;
