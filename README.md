@@ -64,4 +64,6 @@ https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.bind
 </ul>
 
 ### [Backup and upgrade manual installation](https://github.com/openhab-5iver/openHAB-utils/tree/master/Backup%20and%20upgrade%20manual%20installation)
+<ul>
   This script is interactive and will prompt for input. It will perform a full backup of a manual installation (single directory), and then perform an upgrade. This may be obsolete, since there are official backup and restore scripts, but I haven't looked through them yet.
+</ul>
