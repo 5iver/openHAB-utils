@@ -3,6 +3,8 @@ Utilities for use with [openHAB](https://www.openhab.org/)
 
 ### [Zigbee and Z-Wave manual install](https://github.com/openhab-5iver/openHAB-utils/tree/master/Zigbee%20and%20Z-Wave%20manual%20install) (BASH)
 <ul>
+  [Note: the development Z-Wave binding has been [merged into the master branch](https://community.openhab.org/t/zwave-binding-updates/51080), so if using this script, only choose the development branch for Z-Wave if Chris instructs you to do so (he may throw a test jar out there).]
+
   This script is interactive and will prompt for input. It requires to be executed from the addons directory on the openHAB server, **using the same account that runs openHAB**. After downloading, be sure to set the permissions so that it can be executed (`chmod u+x zzManualInstall.sh`), or run it with `bash zzManualInstall.sh`. At this time, there is very little error checking in the case of a failure in the script, so you should verify that it has run successfully when it completes, i.e. run `list -s | grep -i zig` in Karaf. This script can:
   * Download and manually install/upgrade the current snapshot or development Zigbee binding, with a chosen version of the [ZsmartSystems libraries](https://github.com/zsmartsystems/com.zsmartsystems.zigbee)
   * Download and manually install/upgrade the snapshot or development version of the [Z-Wave binding](https://github.com/openhab/org.openhab.binding.zwave/tree/development)
@@ -46,7 +48,7 @@ Here is how to install/upgrade the development Z-Wave binding from commandline..
 ```
 https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zwave/artifact/org.openhab.binding/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-2.4.0-SNAPSHOT.jar)
 ```
-For Zigbee, download all of these, or just the ones pertinent to your coordinator (replace `${ZSMARTSYSTEMS_VERSION}` with the current version of the libraries and `${OH_VERSION}` with the current version of OH (i.e., 2.4.0):
+6. For Zigbee, download all of these, or just the ones pertinent to your coordinator (replace `${ZSMARTSYSTEMS_VERSION}` with the current version of the libraries and `${OH_VERSION}` with the current version of OH (i.e., 2.4.0):
 ```
 https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee-${ZSMARTSYSTEMS_VERSION}.jar
 https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.xbee/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.xbee-${ZSMARTSYSTEMS_VERSION}.jar
@@ -60,7 +62,7 @@ https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.bind
 https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.xbee/artifact/org.openhab.binding/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.xbee-${OH_VERSION}-SNAPSHOT.jar
 https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee/artifact/org.openhab.binding/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee-${OH_VERSION}-SNAPSHOT.jar
 ```
-6. Back in the Karaf console, install the serial transport feature: `feature:install openhab-transport-serial`
+7. Back in the Karaf console, install the serial transport feature: `feature:install openhab-transport-serial`
 </ul>
 
 ### [Backup and upgrade manual installation](https://github.com/openhab-5iver/openHAB-utils/tree/master/Backup%20and%20upgrade%20manual%20installation)
