@@ -169,11 +169,11 @@ installUninstall() {
                 curl -s --connect-timeout 10 --max-time 60 -O -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.telegesis/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.telegesis-${ZSMARTSYSTEMS_VERSION}.jar"
                 curl -s --connect-timeout 10 --max-time 60 -O -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.cc2531/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.cc2531-${ZSMARTSYSTEMS_VERSION}.jar"
 
-                curl -s --connect-timeout 10 --max-time 60 -O -L "https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.cc2531/artifact/org.openhab.binding/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -O -L "https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.ember/artifact/org.openhab.binding/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.ember-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -O -L "https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.telegesis/artifact/org.openhab.binding/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -O -L "https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.xbee/artifact/org.openhab.binding/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.xbee-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -O -L "https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee/artifact/org.openhab.binding/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.cc2531/artifact/org.openhab.binding/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.ember/artifact/org.openhab.binding/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.ember-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.telegesis/artifact/org.openhab.binding/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.xbee/artifact/org.openhab.binding/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.xbee-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee/artifact/org.openhab.binding/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee-${OH_VERSION}-SNAPSHOT.jar"
             fi
         fi
         if [[ "${ACTION}" =~ "Z-Wave" || "${ACTION}" =~ "both" ]]; then
@@ -192,7 +192,7 @@ installUninstall() {
                 if [[ "${ZWAVE_BRANCH}" = "Development" ]]; then
                     curl -s --connect-timeout 10 --max-time 60 -O -L "http://www.cd-jackson.com/downloads/openhab2/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
                 else
-                    curl -s --connect-timeout 10 --max-time 60 -O -L "https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zwave/artifact/org.openhab.binding/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
+                    curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zwave/artifact/org.openhab.binding/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
                 fi
             fi
         fi
@@ -319,8 +319,8 @@ versions() {
     fi
 
     if [[ "${ACTION}" =~ "Install or upgrade" ]]; then
-        #OH_VERSION=$(wget -nv -q -O- 'https://openhab.ci.cloudbees.com/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding$org.openhab.binding.zigbee/console' | grep -a "Building ZigBee Binding" | grep -aoP "[0-9].*[0-9]")
-        OH_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.ci.cloudbees.com/job/openHAB-Distribution/lastSuccessfulBuild/console" | grep -a "Building openHAB" | head -n1 | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
+        #OH_VERSION=$(wget -nv -q -O- 'https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding$org.openhab.binding.zigbee/console' | grep -a "Building ZigBee Binding" | grep -aoP "[0-9].*[0-9]")
+        OH_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://ci.openhab.org/job/openHAB-Distribution/lastSuccessfulBuild/console" | grep -a "Building openHAB" | head -n1 | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
 
     fi
 
