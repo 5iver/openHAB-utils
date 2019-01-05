@@ -10,10 +10,10 @@ NC='\033[0m' # Reset
 
 SILENT=false
 introText() {
-    echo; echo -e "${GREEN_DARK}This script is capable of downloading and manually installing the latest development or master branch builds of the Z-Wave and Zigbee bindings, and/or the openhab-transport-serial"
+    echo; echo -e "${GREEN_DARK}This script is capable of downloading and manually installing the latest development or master branch (snapshot) builds of the Z-Wave and Zigbee bindings, and/or the openhab-transport-serial"
     echo "feature. The script must reside inside the addons folder and be executed on the machine running OH. Before a binding is installed, any previous versions will be"
-    echo "uninstalled. Any manually installed versions will also be backed up by moving them to addons/archive. The installation of any binding will also include the installation"
-    echo "of the opemnhab-transport-serial feature. After using this script, you can uninstall the bindings by deleting their jars from addons or you can use this script.${NC}"
+    echo "uninstalled. Any manually installed versions will also be backed up by moving them to /addons/archive. The installation of any binding will also include the installation"
+    echo "of the openhab-transport-serial feature. After using this script, you can uninstall the bindings by deleting their jars from addons, or you can use this script.${NC}"
     echo; echo -e "${BLINKING}!!!!!${GREY_RED} If you have manually added the Zigbee or Z-Wave binding to your addons.cfg file, they must be removed from the file or the old version will reinstall ${BLINKING}!!!!!${NC}"
 }
 for WORD; do
@@ -101,13 +101,14 @@ for WORD; do
     esac
 done
 
-SOURCE="${BASH_SOURCE[0]}"
-while [[ -h "$SOURCE" ]]; do # resolve SOURCE until the file is no longer a symlink
-    ADDONS="$( cd -P "$( dirname "$SOURCE" )" >/dev/null && pwd )"
-    SOURCE="$(readlink "$SOURCE")"
-    [[ $SOURCE != /* ]] && SOURCE="$ADDONS/$SOURCE" # if SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+SOURCE=${BASH_SOURCE[0]}
+while [[ -h ${SOURCE} ]]; do # resolve SOURCE until the file is no longer a symlink
+    ADDONS=$( cd -P $( dirname ${SOURCE} ) >/dev/null 2>&1 && pwd )
+    SOURCE=$( readlink ${SOURCE} )
+    [[ ${SOURCE} != /* ]] && SOURCE=${ADDONS}/${SOURCE} # if SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
 done
-ADDONS="$( cd -P "$( dirname "$SOURCE" )" >/dev/null && pwd )"
+ADDONS=$( cd -P $( dirname ${SOURCE} ) >/dev/null 2>&1 && pwd )
+#echo "DEBUG: ${ADDONS}"
 
 if [ ! -f ../runtime/bin/client ]; then
     echo -e "${GREY_RED}This script must be copied to the \$OPENHAB_HOME/addons directory before running it${NC}"
@@ -116,7 +117,127 @@ fi
 
 install() {
     if [[ !("${ACTION}" =~ "transport") ]]; then
-        #echo; echo -e ${BLUE_DARK}"Waiting for the uninstallation of previous versions to complete..."${NC}
+        if [[ "${ACTION}" =~ "Install or upgrade" ]]; then
+            if [[ "${ACTION}" =~ "Zigbee" || "${ACTION}" =~ "both" ]]; then
+                echo; echo -e ${BLUE_DARK}"Installing unmanaged Zigbee binding..."${NC}
+                mv -f ${ADDONS}/archive/staging/zigbee/*.jar ${ADDONS}/
+            fi
+            if [[ "${ACTION}" =~ "Z-Wave" || "${ACTION}" =~ "both" ]]; then
+                echo; echo -e ${BLUE_DARK}"Installing unmanaged Z-Wave binding..."${NC}
+                mv -f ${ADDONS}/archive/staging/zwave/*.jar ${ADDONS}/
+            fi
+        fi
+        COUNT=0
+        while [[ ${ZIGBEE_UNINSTALLED} = true || ${ZWAVE_UNINSTALLED} = true ]]; do
+            if [[ ${ZIGBEE_UNINSTALLED} = true && ("${ACTION}" =~ "Zigbee" || "${ACTION}" =~ "both") && "${ACTION}" =~ "Install" ]]; then
+                ZIGBEE_CHECK=$(curl -o /dev/null -s -w "%{http_code}" --connect-timeout 10 --max-time 10 -X GET --header "Accept: application/json" "http://localhost:8080/rest/bindings/zigbee/config")
+                if [[ "${ZIGBEE_CHECK}" = "200" ]]; then
+                    echo -ne "\033[3A\033[38C done.\033[3B\033[44D"
+                    ZIGBEE_UNINSTALLED=false
+                #elif [[ ${COUNT} -lt 24 ]]; then
+                    #echo "DEBUG: Z-Wave ${ZIGBEE_CHECK}"
+                elif [[ ${COUNT} -eq 24 ]]; then
+                    echo; echo -e "${BLINKING}!!!!!${GREY_RED} It has taken more than two minutes to install the Zigbee binding, so exiting ${BLINKING}!!!!!${NC}"; echo
+                    exit
+                #else
+                    #echo "DEBUG: Zigbee wait count: ${COUNT}, ZIGBEE_CHECK=${ZIGBEE_CHECK}"
+                fi
+            else
+                ZIGBEE_UNINSTALLED=false
+            fi
+            if [[ ${ZWAVE_UNINSTALLED} = true && ("${ACTION}" =~ "Z-Wave" || "${ACTION}" =~ "both") && "${ACTION}" =~ "Install" ]]; then
+                ZWAVE_CHECK=$(curl -o /dev/null -s -w "%{http_code}" --connect-timeout 10 --max-time 10 -X GET --header "Accept: application/json" "http://localhost:8080/rest/bindings/zwave/config")
+                if [[ "${ZWAVE_CHECK}" = "200" ]]; then
+                    echo -ne "\033[1A\033[38C done.\033[1B\033[44D"
+                    ZWAVE_UNINSTALLED=false
+                #elif [[ ${COUNT} -lt 24 ]]; then
+                    #echo "DEBUG: Z-Wave ${ZWAVE_CHECK}"
+                elif [[ ${COUNT} -eq 24 ]]; then
+                    echo; echo -e "${BLINKING}!!!!!${GREY_RED} It has taken more than two minutes to install the Z-Wave binding, so exiting ${BLINKING}!!!!!${NC}"; echo
+                    exit
+                #else
+                    #echo "DEBUG: Z-Wave wait count: ${COUNT}, ZWAVE_CHECK=${ZWAVE_CHECK}"
+                fi
+            else
+                ZWAVE_UNINSTALLED=false
+            fi
+            if [[ ${ZIGBEE_UNINSTALLED} = true || ${ZWAVE_UNINSTALLED} = true ]]; then
+                sleep 5
+                ((COUNT++))
+            fi
+        done
+    fi
+    echo; echo -e ${BLUE_DARK}"Complete!"${NC}; echo
+    if [[ "${ACTION}" =~ "Install or upgrade Z-Wave" || "${ACTION}" =~ "Install or upgrade both" ]]; then
+        echo -e ${GREEN_DARK}"You've installed, upgraded, or downgraded the Z-Wave binding. For first time installations or downgrades to the snapshot or development binding, it is"
+                     echo -e "required that all of your Z-Wave Things (except for the controller) be deleted and rediscovered. This does not mean excluding the devices. This is a requirement"
+                     echo -e "due to changes in how the Things aredefined. This is also recommended when the Z-Wave binding is upgraded, in order to update the Thing definitions for installed devices.${NC}"; echo
+    fi
+    exit
+}
+
+download() {
+    if [[ "${ACTION}" =~ "Install or upgrade" ]]; then
+        if [[ "${ACTION}" =~ "Zigbee" || "${ACTION}" =~ "both" ]]; then
+            if [[ "${ACTION}" =~ "Install or upgrade" ]]; then
+                echo; echo -ne ${BLUE_DARK}"Downloading new Zigbee jars..."${NC}
+                mkdir -p ${ADDONS}/archive/staging/zigbee
+                cd ${ADDONS}/archive/staging/zigbee
+
+                curl -s --connect-timeout 10 --max-time 60 -O -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee-${ZSMARTSYSTEMS_VERSION}.jar"
+                curl -s --connect-timeout 10 --max-time 60 -O -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.xbee/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.xbee-${ZSMARTSYSTEMS_VERSION}.jar"
+                curl -s --connect-timeout 10 --max-time 60 -O -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.ember/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.ember-${ZSMARTSYSTEMS_VERSION}.jar"
+                curl -s --connect-timeout 10 --max-time 60 -O -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.telegesis/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.telegesis-${ZSMARTSYSTEMS_VERSION}.jar"
+                curl -s --connect-timeout 10 --max-time 60 -O -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.cc2531/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.cc2531-${ZSMARTSYSTEMS_VERSION}.jar"
+
+                curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.cc2531/artifact/org.openhab.binding/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.ember/artifact/org.openhab.binding/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.ember-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.telegesis/artifact/org.openhab.binding/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.xbee/artifact/org.openhab.binding/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.xbee-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee/artifact/org.openhab.binding/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee-${OH_VERSION}-SNAPSHOT.jar"
+                echo " done."
+            fi
+        fi
+        if [[ "${ACTION}" =~ "Z-Wave" || "${ACTION}" =~ "both" ]]; then
+            echo; echo -ne ${BLUE_DARK}"Downloading new Z-Wave jar..."${NC}
+            mkdir -p ${ADDONS}/archive/staging/zwave
+            cd ${ADDONS}/archive/staging/zwave
+            if [[ "${ZWAVE_BRANCH}" = "Development" ]]; then
+                curl -s --connect-timeout 10 --max-time 60 -O -L "http://www.cd-jackson.com/downloads/openhab2/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
+            else
+                curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zwave/artifact/org.openhab.binding/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
+            fi
+            echo " done."
+        fi
+    fi
+    install
+}
+
+uninstall() {
+    if [[ !("${ACTION}" =~ "transport") ]]; then
+        current_time=$(date "+%Y%m%d%H%M%S")
+        if [[ "${ACTION}" =~ "Zigbee" || "${ACTION}" =~ "both" ]]; then
+            echo; echo -ne ${BLUE_DARK}"Backing up and uninstalling any old manual installs of Zigbee..."${NC}
+            cd ${ADDONS}
+            mkdir -p ${ADDONS}/archive/zigbee
+            if [[ 0 -lt $(ls *zigbee*.jar 2>/dev/null | wc -w) ]]; then
+                mv -f *zigbee*.jar ${ADDONS}/archive/zigbee/
+            fi
+            cd ${ADDONS}/archive/zigbee
+            rename .jar .${current_time}.old *zigbee*
+            echo " done."
+        fi
+        if [[ "${ACTION}" =~ "Z-Wave" || "${ACTION}" =~ "both" ]]; then
+            echo; echo -ne ${BLUE_DARK}"Backing up and uninstalling any old manual installs of Z-Wave..."${NC}
+            cd ${ADDONS}
+            mkdir -p ${ADDONS}/archive/zwave
+            if [[ 0 -lt $(ls *zwave*.jar 2>/dev/null | wc -w) ]]; then
+                mv -f *zwave*.jar ${ADDONS}/archive/zwave/
+            fi
+            cd ${ADDONS}/archive/zwave
+            rename .jar .${current_time}.old *zwave*
+            echo " done."
+        fi
         COUNT=0
         ZIGBEE_UNINSTALLED=false
         ZWAVE_UNINSTALLED=false
@@ -124,13 +245,12 @@ install() {
             if [[ ${ZIGBEE_UNINSTALLED} = false && ("${ACTION}" =~ "Zigbee" || "${ACTION}" =~ "both") ]]; then
                 ZIGBEE_CHECK=$(curl -o /dev/null -s -w "%{http_code}" --connect-timeout 10 --max-time 10 -X GET --header "Accept: application/json" "http://localhost:8080/rest/bindings/zigbee/config")
                 if [[ "${ZIGBEE_CHECK}" -eq "404" ]]; then
-                    echo; echo -e ${BLUE_DARK}"The Zigbee binding has been uninstalled..."${NC}; echo
+                    echo -ne "\033[3A\033[64C done.\033[3B\033[70D"
                     ZIGBEE_UNINSTALLED=true
-                elif [[ ${COUNT} -lt 12 ]]; then
-                    echo -e ${BLUE_DARK}"Waiting for the uninstallation of the Zigbee binding..."${NC}
+                #elif [[ ${COUNT} -lt 24 ]]; then
                     #echo "DEBUG: Zigbee ${ZIGBEE_CHECK}"
-                elif [[ ${COUNT} -eq 12 ]]; then
-                    echo; echo -e "${BLINKING}!!!!!${GREY_RED} It has taken more than two minutes to uninstall the Zigbee binding, so exiting ${BLINKING}!!!!!${NC}"; echo; echo
+                elif [[ ${COUNT} -eq 24 ]]; then
+                    echo; echo -e "${BLINKING}!!!!!${GREY_RED} It has taken more than two minutes to uninstall the Zigbee binding, so exiting ${BLINKING}!!!!!${NC}"; echo
                     exit
                 #else
                     #echo "DEBUG: Zigbee wait count: ${COUNT}, ZIGBEE_CHECK=${ZIGBEE_CHECK}"
@@ -141,12 +261,11 @@ install() {
             if [[ ${ZWAVE_UNINSTALLED} = false && ("${ACTION}" =~ "Z-Wave" || "${ACTION}" =~ "both") ]]; then
                 ZWAVE_CHECK=$(curl -o /dev/null -s -w "%{http_code}" --connect-timeout 10 --max-time 10 -X GET --header "Accept: application/json" "http://localhost:8080/rest/bindings/zwave/config")
                 if [[ "${ZWAVE_CHECK}" -eq "404" ]]; then
-                    echo; echo -e ${BLUE_DARK}"The Z-Wave binding has been uninstalled..."${NC}; echo
+                    echo -ne "\033[1A\033[64C done.\033[1B\033[70D"
                     ZWAVE_UNINSTALLED=true
-                elif [[ ${COUNT} -lt 12 ]]; then
-                    echo -e ${BLUE_DARK}"Waiting for the uninstallation of the Z-Wave binding..."${NC}
+                #elif [[ ${COUNT} -lt 24 ]]; then
                     #echo "DEBUG: Z-Wave ${ZWAVE_CHECK}"
-                elif [[ ${COUNT} -eq 12 ]]; then
+                elif [[ ${COUNT} -eq 24 ]]; then
                     echo; echo -e "${BLINKING}!!!!!${GREY_RED} It has taken more than two minutes to uninstall the Z-Wave binding, so exiting ${BLINKING}!!!!!${NC}"; echo
                     exit
                 #else
@@ -155,65 +274,13 @@ install() {
             else
                 ZWAVE_UNINSTALLED=true
             fi
-            sleep 10
-            ((COUNT++))
+            if [[ ${ZIGBEE_UNINSTALLED} = false || ${ZWAVE_UNINSTALLED} = false ]]; then
+                sleep 5
+                ((COUNT++))
+            fi
         done
-        if [[ "${ACTION}" =~ "Install or upgrade" ]]; then
-            echo; echo -e ${BLUE_DARK}"Starting binding(s)..."${NC}; echo
-            if [[ "${ACTION}" =~ "Zigbee" || "${ACTION}" =~ "both" ]]; then
-                mv -f ${ADDONS}/archive/staging/zigbee/*.jar ${ADDONS}/
-            fi
-            if [[ "${ACTION}" =~ "Z-Wave" || "${ACTION}" =~ "both" ]]; then
-                mv -f ${ADDONS}/archive/staging/zwave/*.jar ${ADDONS}/
-            fi
-        fi
     fi
-    COUNT=0
-    while [[ ${ZIGBEE_UNINSTALLED} = true || ${ZWAVE_UNINSTALLED} = true ]]; do
-        if [[ ${ZIGBEE_UNINSTALLED} = true && ("${ACTION}" =~ "Zigbee" || "${ACTION}" =~ "both") ]]; then
-            ZIGBEE_CHECK=$(curl -o /dev/null -s -w "%{http_code}" --connect-timeout 10 --max-time 10 -X GET --header "Accept: application/json" "http://localhost:8080/rest/bindings/zigbee/config")
-            if [[ "${ZIGBEE_CHECK}" = "200" ]]; then
-                echo; echo -e ${BLUE_DARK}"The Zigbee binding has been installed..."${NC}
-                ZIGBEE_UNINSTALLED=false
-            elif [[ ${COUNT} -lt 12 ]]; then
-                echo -e ${BLUE_DARK}"Waiting for the installation of the Zigbee binding..."${NC}
-                #echo "DEBUG: Z-Wave ${ZIGBEE_CHECK}"
-            elif [[ ${COUNT} -eq 12 ]]; then
-                echo; echo -e "${BLINKING}!!!!!${GREY_RED} It has taken more than two minutes to install the Zigbee binding, so exiting ${BLINKING}!!!!!${NC}"; echo; echo
-                exit
-            #else
-                #echo "DEBUG: Zigbee wait count: ${COUNT}, ZIGBEE_CHECK=${ZIGBEE_CHECK}"
-            fi
-        else
-            ZIGBEE_UNINSTALLED=false
-        fi
-        if [[ ${ZWAVE_UNINSTALLED} = true && ("${ACTION}" =~ "Z-Wave" || "${ACTION}" =~ "both") ]]; then
-            ZWAVE_CHECK=$(curl -o /dev/null -s -w "%{http_code}" --connect-timeout 10 --max-time 10 -X GET --header "Accept: application/json" "http://localhost:8080/rest/bindings/zwave/config")
-            if [[ "${ZWAVE_CHECK}" = "200" ]]; then
-                echo; echo -e ${BLUE_DARK}"The Z-Wave binding has been installed..."${NC}
-                ZWAVE_UNINSTALLED=false
-            elif [[ ${COUNT} -lt 12 ]]; then
-                echo -e ${BLUE_DARK}"Waiting for the installation of the Z-Wave binding..."${NC}
-                #echo "DEBUG: Z-Wave ${ZWAVE_CHECK}"
-            elif [[ ${COUNT} -eq 12 ]]; then
-                echo; echo -e "${BLINKING}!!!!!${GREY_RED} It has taken more than two minutes to install the Z-Wave binding, so exiting ${BLINKING}!!!!!${NC}"; echo; echo
-                exit
-            #else
-                #echo "DEBUG: Z-Wave wait count: ${COUNT}, ZWAVE_CHECK=${ZWAVE_CHECK}"
-            fi
-        else
-            ZWAVE_UNINSTALLED=false
-        fi
-        sleep 10
-        ((COUNT++))
-    done
-    echo; echo -e ${BLUE_DARK}"Complete!"${NC}; echo
-    if [[ "${ACTION}" =~ "Install or upgrade Z-Wave" || "${ACTION}" =~ "Install or upgrade both" ]]; then
-        echo -e ${GREEN_DARK}"You've installed, upgraded, or downgraded the Z-Wave binding. For first time installs or downgrades of the development binding, it is required that all of your Z-Wave"
-        echo -e "Things (except for the controller) be deleted and rediscovered. This does not mean excluding the devices. This is a requirement due to changes in how the Things are"
-        echo -e "defined. This is also recommended when the developemnt Z-Wave binding is upgraded, in order to update the Thing definitions with the frequent changes that are made.${NC}"; echo
-    fi
-    exit
+    download
 }
 
 karaf() {
@@ -242,70 +309,18 @@ karaf() {
     if [[ "${ACTION}" =~ "transport" ]]; then
         echo; echo -e ${BLUE_DARK}"Installing openhab-serial-transport..."${NC}
     elif [[ "${ACTION}" =~ "Install" ]]; then
-        echo; echo -e ${BLUE_DARK}"Uninstalling binding(s) and installing openhab-serial-transport..."${NC}
+        echo; echo -e ${BLUE_DARK}"Uninstalling any managed binding(s) and installing openhab-serial-transport..."${NC}
     else
-        echo; echo -e ${BLUE_DARK}"Uninstalling binding(s)..."${NC}
+        echo; echo -e ${BLUE_DARK}"Uninstalling any managed binding(s)..."${NC}
     fi
     #ssh -p 8101 -o StrictHostKeyChecking=no -l ${KARAF_ACCOUNT} localhost ${KARAF_FUNCTION}
     # invoke the client command since we are running on localhost
     cd ${ADDONS}
     ../runtime/bin/client ${KARAF_FUNCTION} --
     if [[ !("${ACTION}" =~ "transport") ]]; then
-        echo -e ${GREEN_DARK}"An error mesage here is normal...${NC}"
+        echo -e ${GREEN_DARK}"... a 'No matching bundles' error mesage is normal, if a binding had not been previously installed...${NC}"
     fi
-    install
-}
-
-manualUninstallAndDownload() {
-    current_time=$(date "+%Y%m%d%H%M%S")
-    if [[ "${ACTION}" =~ "Zigbee" || "${ACTION}" =~ "both" ]]; then
-        echo; echo -e ${BLUE_DARK}"Backing up any old manual installs of Zigbee..."${NC}
-        cd ${ADDONS}
-        mkdir -p ${ADDONS}/archive/zigbee
-        if [[ 0 -lt $(ls *zigbee*.jar 2>/dev/null | wc -w) ]]; then
-            mv -f *zigbee*.jar ${ADDONS}/archive/zigbee/
-        fi
-        cd ${ADDONS}/archive/zigbee
-        rename .jar .${current_time}.old *zigbee*
-        if [[ "${ACTION}" =~ "Install or upgrade" ]]; then
-            echo; echo -e ${BLUE_DARK}"Downloading new Zigbee jars..."${NC}
-            mkdir -p ${ADDONS}/archive/staging/zigbee
-            cd ${ADDONS}/archive/staging/zigbee
-
-            curl -s --connect-timeout 10 --max-time 60 -O -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee-${ZSMARTSYSTEMS_VERSION}.jar"
-            curl -s --connect-timeout 10 --max-time 60 -O -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.xbee/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.xbee-${ZSMARTSYSTEMS_VERSION}.jar"
-            curl -s --connect-timeout 10 --max-time 60 -O -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.ember/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.ember-${ZSMARTSYSTEMS_VERSION}.jar"
-            curl -s --connect-timeout 10 --max-time 60 -O -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.telegesis/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.telegesis-${ZSMARTSYSTEMS_VERSION}.jar"
-            curl -s --connect-timeout 10 --max-time 60 -O -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.cc2531/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.cc2531-${ZSMARTSYSTEMS_VERSION}.jar"
-
-            curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.cc2531/artifact/org.openhab.binding/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-SNAPSHOT.jar"
-            curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.ember/artifact/org.openhab.binding/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.ember-${OH_VERSION}-SNAPSHOT.jar"
-            curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.telegesis/artifact/org.openhab.binding/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-SNAPSHOT.jar"
-            curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.xbee/artifact/org.openhab.binding/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.xbee-${OH_VERSION}-SNAPSHOT.jar"
-            curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee/artifact/org.openhab.binding/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee-${OH_VERSION}-SNAPSHOT.jar"
-        fi
-    fi
-    if [[ "${ACTION}" =~ "Z-Wave" || "${ACTION}" =~ "both" ]]; then
-        echo; echo -e ${BLUE_DARK}"Backing up any old manual installs of Z-Wave..."${NC}
-        cd ${ADDONS}
-        mkdir -p ${ADDONS}/archive/zwave
-        if [[ 0 -lt $(ls *zwave*.jar 2>/dev/null | wc -w) ]]; then
-            mv -f *zwave*.jar ${ADDONS}/archive/zwave/
-        fi
-        cd ${ADDONS}/archive/zwave
-        rename .jar .${current_time}.old *zwave*
-        if [[ "${ACTION}" =~ "Install or upgrade" ]]; then
-            echo; echo -e ${BLUE_DARK}"Downloading new Z-Wave jar..."${NC}
-            mkdir -p ${ADDONS}/archive/staging/zwave
-            cd ${ADDONS}/archive/staging/zwave
-            if [[ "${ZWAVE_BRANCH}" = "Development" ]]; then
-                curl -s --connect-timeout 10 --max-time 60 -O -L "http://www.cd-jackson.com/downloads/openhab2/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
-            else
-                curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zwave/artifact/org.openhab.binding/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
-            fi
-        fi
-    fi
-    karaf
+    uninstall
 }
 
 summary() {
@@ -340,7 +355,7 @@ summary() {
             esac
         done
     fi
-    manualUninstallAndDownload
+    karaf
 }
 
 versions() {
