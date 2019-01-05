@@ -124,16 +124,16 @@ install() {
             if [[ ${ZIGBEE_UNINSTALLED} = false && ("${ACTION}" =~ "Zigbee" || "${ACTION}" =~ "both") ]]; then
                 ZIGBEE_CHECK=$(curl -o /dev/null -s -w "%{http_code}" --connect-timeout 10 --max-time 10 -X GET --header "Accept: application/json" "http://localhost:8080/rest/bindings/zigbee/config")
                 if [[ "${ZIGBEE_CHECK}" -eq "404" ]]; then
-                    echo; echo -e ${BLUE_DARK}"The Zigbee binding has been uninstalled..."${NC}
+                    echo; echo -e ${BLUE_DARK}"The Zigbee binding has been uninstalled..."${NC}; echo
                     ZIGBEE_UNINSTALLED=true
                 elif [[ ${COUNT} -lt 12 ]]; then
                     echo -e ${BLUE_DARK}"Waiting for the uninstallation of the Zigbee binding..."${NC}
-                    #echo "Debug: Zigbee ${ZIGBEE_CHECK}"
+                    #echo "DEBUG: Zigbee ${ZIGBEE_CHECK}"
                 elif [[ ${COUNT} -eq 12 ]]; then
                     echo; echo -e "${BLINKING}!!!!!${GREY_RED} It has taken more than two minutes to uninstall the Zigbee binding, so exiting ${BLINKING}!!!!!${NC}"; echo; echo
                     exit
                 #else
-                    #echo "Debug: Zigbee wait count: ${COUNT}, ZIGBEE_CHECK=${ZIGBEE_CHECK}"
+                    #echo "DEBUG: Zigbee wait count: ${COUNT}, ZIGBEE_CHECK=${ZIGBEE_CHECK}"
                 fi
             else
                 ZIGBEE_UNINSTALLED=true
@@ -141,16 +141,16 @@ install() {
             if [[ ${ZWAVE_UNINSTALLED} = false && ("${ACTION}" =~ "Z-Wave" || "${ACTION}" =~ "both") ]]; then
                 ZWAVE_CHECK=$(curl -o /dev/null -s -w "%{http_code}" --connect-timeout 10 --max-time 10 -X GET --header "Accept: application/json" "http://localhost:8080/rest/bindings/zwave/config")
                 if [[ "${ZWAVE_CHECK}" -eq "404" ]]; then
-                    echo; echo -e ${BLUE_DARK}"The Z-Wave binding has been uninstalled..."${NC}
+                    echo; echo -e ${BLUE_DARK}"The Z-Wave binding has been uninstalled..."${NC}; echo
                     ZWAVE_UNINSTALLED=true
                 elif [[ ${COUNT} -lt 12 ]]; then
                     echo -e ${BLUE_DARK}"Waiting for the uninstallation of the Z-Wave binding..."${NC}
-                    #echo "Debug: Z-Wave ${ZWAVE_CHECK}"
+                    #echo "DEBUG: Z-Wave ${ZWAVE_CHECK}"
                 elif [[ ${COUNT} -eq 12 ]]; then
-                    echo; echo -e "${BLINKING}!!!!!${GREY_RED} It has taken more than two minutes to uninstall the Z-Wave binding, so exiting ${BLINKING}!!!!!${NC}"; echo; echo
+                    echo; echo -e "${BLINKING}!!!!!${GREY_RED} It has taken more than two minutes to uninstall the Z-Wave binding, so exiting ${BLINKING}!!!!!${NC}"; echo
                     exit
                 #else
-                    #echo "Debug: Z-Wave wait count: ${COUNT}, ZWAVE_CHECK=${ZWAVE_CHECK}"
+                    #echo "DEBUG: Z-Wave wait count: ${COUNT}, ZWAVE_CHECK=${ZWAVE_CHECK}"
                 fi
             else
                 ZWAVE_UNINSTALLED=true
@@ -159,7 +159,7 @@ install() {
             ((COUNT++))
         done
         if [[ "${ACTION}" =~ "Install or upgrade" ]]; then
-            echo; echo -e ${BLUE_DARK}"Starting bindings..."${NC}; echo
+            echo; echo -e ${BLUE_DARK}"Starting binding(s)..."${NC}; echo
             if [[ "${ACTION}" =~ "Zigbee" || "${ACTION}" =~ "both" ]]; then
                 mv -f ${ADDONS}/archive/staging/zigbee/*.jar ${ADDONS}/
             fi
@@ -177,12 +177,12 @@ install() {
                 ZIGBEE_UNINSTALLED=false
             elif [[ ${COUNT} -lt 12 ]]; then
                 echo -e ${BLUE_DARK}"Waiting for the installation of the Zigbee binding..."${NC}
-                #echo "Debug: Z-Wave ${ZIGBEE_CHECK}"
+                #echo "DEBUG: Z-Wave ${ZIGBEE_CHECK}"
             elif [[ ${COUNT} -eq 12 ]]; then
                 echo; echo -e "${BLINKING}!!!!!${GREY_RED} It has taken more than two minutes to install the Zigbee binding, so exiting ${BLINKING}!!!!!${NC}"; echo; echo
                 exit
             #else
-                #echo "Debug: Zigbee wait count: ${COUNT}, ZIGBEE_CHECK=${ZIGBEE_CHECK}"
+                #echo "DEBUG: Zigbee wait count: ${COUNT}, ZIGBEE_CHECK=${ZIGBEE_CHECK}"
             fi
         else
             ZIGBEE_UNINSTALLED=false
@@ -194,12 +194,12 @@ install() {
                 ZWAVE_UNINSTALLED=false
             elif [[ ${COUNT} -lt 12 ]]; then
                 echo -e ${BLUE_DARK}"Waiting for the installation of the Z-Wave binding..."${NC}
-                #echo "Debug: Z-Wave ${ZWAVE_CHECK}"
+                #echo "DEBUG: Z-Wave ${ZWAVE_CHECK}"
             elif [[ ${COUNT} -eq 12 ]]; then
                 echo; echo -e "${BLINKING}!!!!!${GREY_RED} It has taken more than two minutes to install the Z-Wave binding, so exiting ${BLINKING}!!!!!${NC}"; echo; echo
                 exit
             #else
-                #echo "Debug: Z-Wave wait count: ${COUNT}, ZWAVE_CHECK=${ZWAVE_CHECK}"
+                #echo "DEBUG: Z-Wave wait count: ${COUNT}, ZWAVE_CHECK=${ZWAVE_CHECK}"
             fi
         else
             ZWAVE_UNINSTALLED=false
