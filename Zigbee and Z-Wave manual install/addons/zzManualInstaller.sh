@@ -211,7 +211,7 @@ install() {
     if [[ "${ACTION}" =~ "Install or upgrade Z-Wave" || "${ACTION}" =~ "Install or upgrade both" ]]; then
         echo -e ${GREEN_DARK}"You've installed, upgraded, or downgraded the Z-Wave binding. For first time installs or downgrades of the development binding, it is required that all of your Z-Wave"
         echo -e "Things (except for the controller) be deleted and rediscovered. This does not mean excluding the devices. This is a requirement due to changes in how the Things are"
-        echo -e "defined. This is also recommended when the developemnt Z-Wave binding is upgraded, in order to update the Thing definitions with the frequent changes that are made.${NC}"; echo
+        echo -e "defined. This is also recommended when the development Z-Wave binding is upgraded, in order to update the Thing definitions with the frequent changes that are made.${NC}"; echo
     fi
     exit
 }
