@@ -49,7 +49,10 @@ for WORD; do
                 ZWAVE_VERSION=$2
                 ZWAVE_VERSION="${ZWAVE_VERSION,,}"# lower case
                 ZWAVE_VERSION="${ZWAVE_VERSION[@]^}"# title case
-                if [[ "${ZWAVE_VERSION}" = "Development" || "${ZWAVE_VERSION}" = "Master" ]]; then
+                if [[ "${ZWAVE_VERSION}" = "Development" || "${ZWAVE_VERSION}" = "Snapshot" ]]; then
+                    if [[ "${ZWAVE_VERSION}" = "Snapshot" ]]; then
+                        ZWAVE_VERSION="OpenHAB snapshot"
+                    fi
                     shift 2
                     #echo "ZWAVE_VERSION=${ZWAVE_VERSION,,}"
                 else
@@ -65,11 +68,18 @@ for WORD; do
                 ZIGBEE_VERSION=$2
                 ZIGBEE_VERSION="${ZIGBEE_VERSION,,}"# lower case
                 ZIGBEE_VERSION="${ZIGBEE_VERSION[@]^}"# title case
-                if [[ "${ZIGBEE_VERSION}" = "Snapshot" || "${ZIGBEE_VERSION}" = "Release" || "${ZIGBEE_VERSION}" = "Pre-release" ]]; then
+                if [[ "${ZIGBEE_VERSION}" = "Snapshot" || "${ZIGBEE_VERSION}" = "Release" || "${ZIGBEE_VERSION}" = "Prerelease" ]]; then
+                    if [[ "${ZIGBEE_VERSION}" = "Snapshot" ]]; then
+                        ZIGBEE_VERSION="OpenHAB baseline (included in OpenHAB snapshot)"
+                    elif [[ "${ZIGBEE_VERSION}" = "Release" ]]; then
+                        ZIGBEE_VERSION="ZigBee Library release (pre-OpenHAB snapshot)"
+                    elif [[ "${ZIGBEE_VERSION}" = "Prerelease" ]]; then
+                        ZIGBEE_VERSION="ZigBee Library snapshot (still in development)"
+                    fi
                     shift 2
                     #echo "ZIGBEE_VERSION=${ZIGBEE_VERSION,,}"
                 else
-                    echo -e "${GREY_RED}ZIGBEE_VERSION argument specified with invalid value (${ZIGBEE_VERSION}). Accepted values: snapshot, release, pre-release.${NC}"
+                    echo -e "${GREY_RED}ZIGBEE_VERSION argument specified with invalid value (${ZIGBEE_VERSION}). Accepted values: snapshot, release, prerelease.${NC}"
                     echo; exit
                 fi
             else
@@ -91,7 +101,7 @@ for WORD; do
             echo -e "${BLUE_DARK}If executed without the ACTION argument, menus will be displayed for each option${NC}"; echo
             echo -e "    --ACTION             ${BLUE_DARK}Accepted values: zigbee, zwave, both. Specify which bindings to install/upgrade.${NC}"
             echo -e "    --ZWAVE_VERSION      ${BLUE_DARK}Accepted values: snapshot, development. Default: snapshot. Specify the snapshot or development Z-Wave version.${NC}"
-            echo -e "    --ZIGBEE_VERSION     ${BLUE_DARK}Accepted values: snapshot, release, pre-release. Default: snapshot. Specify the snapshot, release, or pre-release Zigbee library version.${NC}"
+            echo -e "    --ZIGBEE_VERSION     ${BLUE_DARK}Accepted values: snapshot, release, prerelease. Default: snapshot. Specify the snapshot, release, or prerelease Zigbee library version.${NC}"
             echo -e "    --LIBRARY_VERSION    ${BLUE_DARK}Default: latest version, based on choice of ZIGBEE_VERSION. Specify the version of the Zigbee libraries.${NC}"
             echo -e "    --HELP               ${BLUE_DARK}Display this help and exit${NC}"; echo
             echo; exit;;
