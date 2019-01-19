@@ -7,11 +7,12 @@ BLINKING='\033[5;37;41m'
 NC='\033[0m' # Reset
 
 # verion check
+# TODO
 
 SILENT=false
 introText() {
-    echo; echo -e "${GREEN_DARK}This script is capable of downloading and manually installing the latest development or master branch (snapshot) builds of the Z-Wave and Zigbee bindings, and/or the openhab-transport-serial"
-    echo "feature. The script must reside inside the addons folder and be executed on the machine running OH. Before a binding is installed, any previous versions will be"
+    echo; echo -e "${GREEN_DARK}This script is capable of downloading and manually installing the latest development or snapshot builds of the Z-Wave and Zigbee bindings, and/or the openhab-transport-serial"
+    echo "feature. The script must reside inside the addons folder and be executed on the machine running OpenHAB. Before a binding is installed, any previous versions will be"
     echo "uninstalled. Any manually installed versions will also be backed up by moving them to /addons/archive. The installation of any binding will also include the installation"
     echo "of the openhab-transport-serial feature. After using this script, you can uninstall the bindings by deleting their jars from addons, or you can use this script.${NC}"
     echo; echo -e "${BLINKING}!!!!!${GREY_RED} If you have manually added the Zigbee or Z-Wave binding to your addons.cfg file, they must be removed from the file or the old version will reinstall ${BLINKING}!!!!!${NC}"
@@ -43,56 +44,56 @@ for WORD; do
                 echo -e "${GREY_RED}ACTION argument specified without a value${NC}"
                 echo; exit
             fi;;
-        --ZWAVE_BRANCH)
+        --ZWAVE_VERSION)
             if [[ "${2:0:1}" != "-" && "${2:0:1}" != "" ]]; then
-                ZWAVE_BRANCH=$2
-                ZWAVE_BRANCH="${ZWAVE_BRANCH,,}"# lower case
-                ZWAVE_BRANCH="${ZWAVE_BRANCH[@]^}"# title case
-                if [[ "${ZWAVE_BRANCH}" = "Development" || "${ZWAVE_BRANCH}" = "Master" ]]; then
+                ZWAVE_VERSION=$2
+                ZWAVE_VERSION="${ZWAVE_VERSION,,}"# lower case
+                ZWAVE_VERSION="${ZWAVE_VERSION[@]^}"# title case
+                if [[ "${ZWAVE_VERSION}" = "Development" || "${ZWAVE_VERSION}" = "Master" ]]; then
                     shift 2
-                    #echo "ZWAVE_BRANCH=${ZWAVE_BRANCH,,}"
+                    #echo "ZWAVE_VERSION=${ZWAVE_VERSION,,}"
                 else
-                    echo -e "${GREY_RED}ZWAVE_BRANCH argument specified with invalid value (${ZWAVE_BRANCH}). Accepted values: development, master.${NC}"
+                    echo -e "${GREY_RED}ZWAVE_VERSION argument specified with invalid value (${ZWAVE_VERSION}). Accepted values: development, master.${NC}"
                     echo; exit
                 fi
             else
-                echo -e "${GREY_RED}ZWAVE_BRANCH argument specified without a value${NC}"
+                echo -e "${GREY_RED}ZWAVE_VERSION argument specified without a value${NC}"
                 echo; exit
             fi;;
-        --ZIGBEE_BRANCH)
+        --ZIGBEE_VERSION)
             if [[ "${2:0:1}" != "-" && "${2:0:1}" != "" ]]; then
-                ZIGBEE_BRANCH=$2
-                ZIGBEE_BRANCH="${ZIGBEE_BRANCH,,}"# lower case
-                ZIGBEE_BRANCH="${ZIGBEE_BRANCH[@]^}"# title case
-                if [[ "${ZIGBEE_BRANCH}" = "Development" || "${ZIGBEE_BRANCH}" = "Master" ]]; then
+                ZIGBEE_VERSION=$2
+                ZIGBEE_VERSION="${ZIGBEE_VERSION,,}"# lower case
+                ZIGBEE_VERSION="${ZIGBEE_VERSION[@]^}"# title case
+                if [[ "${ZIGBEE_VERSION}" = "Snapshot" || "${ZIGBEE_VERSION}" = "Release" || "${ZIGBEE_VERSION}" = "Pre-release" ]]; then
                     shift 2
-                    #echo "ZIGBEE_BRANCH=${ZIGBEE_BRANCH,,}"
+                    #echo "ZIGBEE_VERSION=${ZIGBEE_VERSION,,}"
                 else
-                    echo -e "${GREY_RED}ZIGBEE_BRANCH argument specified with invalid value (${ZIGBEE_BRANCH}). Accepted values: development, master.${NC}"
+                    echo -e "${GREY_RED}ZIGBEE_VERSION argument specified with invalid value (${ZIGBEE_VERSION}). Accepted values: snapshot, release, pre-release.${NC}"
                     echo; exit
                 fi
             else
-                echo -e "${GREY_RED}ZIGBEE_BRANCH argument specified without a value${NC}"
+                echo -e "${GREY_RED}ZIGBEE_VERSION argument specified without a value${NC}"
                 echo; exit
             fi;;
-        --ZSMARTSYSTEMS_VERSION)
+        --LIBRARY_VERSION)
             if [[ "${2:0:1}" != "-" && "${2:0:1}" != "" ]]; then
-                ZSMARTSYSTEMS_VERSION=$2
+                LIBRARY_VERSION=$2
                 shift 2
-                #echo "ZSMARTSYSTEMS_VERSION=${ZSMARTSYSTEMS_VERSION}"
+                #echo "LIBRARY_VERSION=${LIBRARY_VERSION}"
             else
-                echo -e "${GREY_RED}ZSMARTSYSTEMS_VERSION argument specified without a value${NC}"
+                echo -e "${GREY_RED}LIBRARY_VERSION argument specified without a value${NC}"
                 echo; exit
             fi;;
         --HELP)
             introText; echo
             echo -e "${BLUE_DARK}Usage: zzManualInstaller.sh [OPTION]...${NC}"; echo
             echo -e "${BLUE_DARK}If executed without the ACTION argument, menus will be displayed for each option${NC}"; echo
-            echo -e "    --ACTION                  ${BLUE_DARK}Accepted values: zigbee, zwave, both. Specify which bindings to install/upgrade.${NC}"
-            echo -e "    --ZWAVE_BRANCH            ${BLUE_DARK}Accepted values: development, master. Default: master. Specify the development or master branch for Z-Wave.${NC}"
-            echo -e "    --ZIGBEE_BRANCH           ${BLUE_DARK}Accepted values: development, master. Default: master. Specify the development or master branch for Zigbee.${NC}"
-            echo -e "    --ZSMARTSYSTEMS_VERSION   ${BLUE_DARK}Default: latest version, based on selected branch. Specify the version of the ZSmartSystems libraries.${NC}"
-            echo -e "    --HELP                    ${BLUE_DARK}Display this help and exit${NC}"; echo
+            echo -e "    --ACTION             ${BLUE_DARK}Accepted values: zigbee, zwave, both. Specify which bindings to install/upgrade.${NC}"
+            echo -e "    --ZWAVE_VERSION      ${BLUE_DARK}Accepted values: snapshot, development. Default: snapshot. Specify the snapshot or development Z-Wave version.${NC}"
+            echo -e "    --ZIGBEE_VERSION     ${BLUE_DARK}Accepted values: snapshot, release, pre-release. Default: snapshot. Specify the snapshot, release, or pre-release Zigbee library version.${NC}"
+            echo -e "    --LIBRARY_VERSION    ${BLUE_DARK}Default: latest version, based on choice of ZIGBEE_VERSION. Specify the version of the Zigbee libraries.${NC}"
+            echo -e "    --HELP               ${BLUE_DARK}Display this help and exit${NC}"; echo
             echo; exit;;
         --*) echo -e "${GREY_RED}Unrecognized argument: ${WORD}${NC}"
             echo; exit;;
@@ -132,7 +133,12 @@ install() {
             if [[ ${ZIGBEE_UNINSTALLED} = true && ("${ACTION}" =~ "Zigbee" || "${ACTION}" =~ "both") && "${ACTION}" =~ "Install" ]]; then
                 ZIGBEE_CHECK=$(curl -o /dev/null -s -w "%{http_code}" --connect-timeout 10 --max-time 10 -X GET --header "Accept: application/json" "http://localhost:8080/rest/bindings/zigbee/config")
                 if [[ "${ZIGBEE_CHECK}" = "200" ]]; then
-                    echo -ne "\033[3A\033[38C done.\033[3B\033[44D"
+                    if [[ "${ACTION}" =~ "both" ]]; then
+                        offset="3"
+                    else
+                        offset="1"
+                    fi
+                    echo -ne "\033[${offset}A\033[38C done.\033[${offset}B\033[44D"
                     ZIGBEE_UNINSTALLED=false
                 #elif [[ ${COUNT} -lt 24 ]]; then
                     #echo "DEBUG: Z-Wave ${ZIGBEE_CHECK}"
@@ -184,17 +190,29 @@ download() {
                 mkdir -p ${ADDONS}/archive/staging/zigbee
                 cd ${ADDONS}/archive/staging/zigbee
 
-                curl -s --connect-timeout 10 --max-time 60 -O -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee-${ZSMARTSYSTEMS_VERSION}.jar"
-                curl -s --connect-timeout 10 --max-time 60 -O -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.xbee/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.xbee-${ZSMARTSYSTEMS_VERSION}.jar"
-                curl -s --connect-timeout 10 --max-time 60 -O -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.ember/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.ember-${ZSMARTSYSTEMS_VERSION}.jar"
-                curl -s --connect-timeout 10 --max-time 60 -O -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.telegesis/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.telegesis-${ZSMARTSYSTEMS_VERSION}.jar"
-                curl -s --connect-timeout 10 --max-time 60 -O -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.cc2531/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.cc2531-${ZSMARTSYSTEMS_VERSION}.jar"
-
-                curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.cc2531/artifact/org.openhab.binding/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.ember/artifact/org.openhab.binding/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.ember-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.telegesis/artifact/org.openhab.binding/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.xbee/artifact/org.openhab.binding/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.xbee-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee/artifact/org.openhab.binding/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee-${OH_VERSION}-SNAPSHOT.jar"
+                if [[ "${ZIGBEE_VERSION}" =~ "ZigBee Library snapshot (still in development)" ]]; then
+                    FILE_NAME_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.cc2531/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
+                    curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.cc2531.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.cc2531/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.dongle.cc2531-${FILE_NAME_VERSION}.jar"
+                    FILE_NAME_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.ember/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
+                    curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.ember.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.ember/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.dongle.ember-${FILE_NAME_VERSION}.jar"
+                    FILE_NAME_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.telegesis/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
+                    curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.telegesis.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.telegesis/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.dongle.telegesis-${FILE_NAME_VERSION}.jar"
+                    FILE_NAME_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.xbee/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
+                    curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.xbee.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.xbee/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.dongle.xbee-${FILE_NAME_VERSION}.jar"
+                    FILE_NAME_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
+                    curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee-${FILE_NAME_VERSION}.jar"
+                else
+                    curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.cc2531.jar" -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.cc2531/${LIBRARY_VERSION}/com.zsmartsystems.zigbee.dongle.cc2531-${LIBRARY_VERSION}.jar"
+                    curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.ember.jar" -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.ember/${LIBRARY_VERSION}/com.zsmartsystems.zigbee.dongle.ember-${LIBRARY_VERSION}.jar"
+                    curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.telegesis.jar" -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.telegesis/${LIBRARY_VERSION}/com.zsmartsystems.zigbee.dongle.telegesis-${LIBRARY_VERSION}.jar"
+                    curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.xbee.jar" -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.xbee/${LIBRARY_VERSION}/com.zsmartsystems.zigbee.dongle.xbee-${LIBRARY_VERSION}.jar"
+                    curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.jar" -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee/${LIBRARY_VERSION}/com.zsmartsystems.zigbee-${LIBRARY_VERSION}.jar"
+                fi
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.cc2531.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.cc2531/artifact/org.openhab.binding/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.ember.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.ember/artifact/org.openhab.binding/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.ember-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.telegesis.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.telegesis/artifact/org.openhab.binding/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.xbee.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.xbee/artifact/org.openhab.binding/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.xbee-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee/artifact/org.openhab.binding/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee-${OH_VERSION}-SNAPSHOT.jar"
                 echo " done."
             fi
         fi
@@ -202,7 +220,7 @@ download() {
             echo; echo -ne ${BLUE_DARK}"Downloading new Z-Wave jar..."${NC}
             mkdir -p ${ADDONS}/archive/staging/zwave
             cd ${ADDONS}/archive/staging/zwave
-            if [[ "${ZWAVE_BRANCH}" = "Development" ]]; then
+            if [[ "${ZWAVE_VERSION}" = "Development" ]]; then
                 curl -s --connect-timeout 10 --max-time 60 -O -L "http://www.cd-jackson.com/downloads/openhab2/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
             else
                 curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zwave/artifact/org.openhab.binding/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
@@ -217,7 +235,7 @@ uninstall() {
     if [[ !("${ACTION}" =~ "transport") ]]; then
         current_time=$(date "+%Y%m%d%H%M%S")
         if [[ "${ACTION}" =~ "Zigbee" || "${ACTION}" =~ "both" ]]; then
-            echo; echo -ne ${BLUE_DARK}"Backing up and uninstalling any old manual installs of Zigbee..."${NC}
+            echo; echo -e ${BLUE_DARK}"Backing up and uninstalling any unmanaged installs of Zigbee..."${NC}
             cd ${ADDONS}
             mkdir -p ${ADDONS}/archive/zigbee
             if [[ 0 -lt $(ls *zigbee*.jar 2>/dev/null | wc -w) ]]; then
@@ -225,10 +243,10 @@ uninstall() {
             fi
             cd ${ADDONS}/archive/zigbee
             rename .jar .${current_time}.old *zigbee*
-            echo " done."
+            #echo " done."
         fi
         if [[ "${ACTION}" =~ "Z-Wave" || "${ACTION}" =~ "both" ]]; then
-            echo; echo -ne ${BLUE_DARK}"Backing up and uninstalling any old manual installs of Z-Wave..."${NC}
+            echo; echo -e ${BLUE_DARK}"Backing up and uninstalling any unmanaged installs of Z-Wave..."${NC}
             cd ${ADDONS}
             mkdir -p ${ADDONS}/archive/zwave
             if [[ 0 -lt $(ls *zwave*.jar 2>/dev/null | wc -w) ]]; then
@@ -236,7 +254,7 @@ uninstall() {
             fi
             cd ${ADDONS}/archive/zwave
             rename .jar .${current_time}.old *zwave*
-            echo " done."
+            #echo " done."
         fi
         COUNT=0
         ZIGBEE_UNINSTALLED=false
@@ -244,8 +262,13 @@ uninstall() {
         while [[ ${ZIGBEE_UNINSTALLED} = false || ${ZWAVE_UNINSTALLED} = false ]]; do
             if [[ ${ZIGBEE_UNINSTALLED} = false && ("${ACTION}" =~ "Zigbee" || "${ACTION}" =~ "both") ]]; then
                 ZIGBEE_CHECK=$(curl -o /dev/null -s -w "%{http_code}" --connect-timeout 10 --max-time 10 -X GET --header "Accept: application/json" "http://localhost:8080/rest/bindings/zigbee/config")
-                if [[ "${ZIGBEE_CHECK}" -eq "404" ]]; then
-                    echo -ne "\033[3A\033[64C done.\033[3B\033[70D"
+                if [[ "${ZIGBEE_CHECK}" = "404" ]]; then
+                    if [[ "${ACTION}" =~ "both" ]]; then
+                        offset="3"
+                    else
+                        offset="1"
+                    fi
+                    echo -ne "\033[${offset}A\033[63C done.\033[${offset}B\033[69D"
                     ZIGBEE_UNINSTALLED=true
                 #elif [[ ${COUNT} -lt 24 ]]; then
                     #echo "DEBUG: Zigbee ${ZIGBEE_CHECK}"
@@ -260,8 +283,8 @@ uninstall() {
             fi
             if [[ ${ZWAVE_UNINSTALLED} = false && ("${ACTION}" =~ "Z-Wave" || "${ACTION}" =~ "both") ]]; then
                 ZWAVE_CHECK=$(curl -o /dev/null -s -w "%{http_code}" --connect-timeout 10 --max-time 10 -X GET --header "Accept: application/json" "http://localhost:8080/rest/bindings/zwave/config")
-                if [[ "${ZWAVE_CHECK}" -eq "404" ]]; then
-                    echo -ne "\033[1A\033[64C done.\033[1B\033[70D"
+                if [[ "${ZWAVE_CHECK}" = "404" ]]; then
+                    echo -ne "\033[1A\033[63C done.\033[1B\033[69D"
                     ZWAVE_UNINSTALLED=true
                 #elif [[ ${COUNT} -lt 24 ]]; then
                     #echo "DEBUG: Z-Wave ${ZWAVE_CHECK}"
@@ -318,7 +341,7 @@ karaf() {
     cd ${ADDONS}
     ../runtime/bin/client ${KARAF_FUNCTION} --
     if [[ !("${ACTION}" =~ "transport") ]]; then
-        echo -e ${GREEN_DARK}"... a 'No matching bundles' error mesage is normal, if a binding had not been previously installed...${NC}"
+        echo -e ${GREEN_DARK}"... a 'No matching bundles' error mesage is normal, if a binding had not been previously installed.${NC}"
     fi
     uninstall
 }
@@ -329,21 +352,17 @@ summary() {
     fi
     echo; echo -e "     ${BLACK_WHITE}*****     SUMMARY     *****${NC}     "; echo
     echo -e "${GREEN_DARK}Addons path:${NC} ${ADDONS}"
-    echo -e "${GREEN_DARK}OH account:${NC} ${CURRENT_ACCOUNT}"
+    echo -e "${GREEN_DARK}OpenHAB account:${NC} ${CURRENT_ACCOUNT}"
     echo -e "${GREEN_DARK}Requested action:${NC} ${ACTION}"
     if [[ "${ACTION}" =~ "Install or upgrade" ]]; then
-        echo -e "${GREEN_DARK}Current OH snapshot version:${NC} ${OH_VERSION}"
+        echo -e "${GREEN_DARK}Current OpenHAB snapshot version:${NC} ${OH_VERSION}"
     fi
     if [[ ${ACTION} = "Install or upgrade Z-Wave binding" || ${ACTION} = "Install or upgrade both bindings" ]]; then
-        echo -e "${GREEN_DARK}Requested branch for Z-Wave:${NC} ${ZWAVE_BRANCH}"
+        echo -e "${GREEN_DARK}Requested Z-Wave version:${NC} ${ZWAVE_VERSION}"
     fi
     if [[ ${ACTION} = "Install or upgrade Zigbee binding" || ${ACTION} = "Install or upgrade both bindings" ]]; then
-        echo -e "${GREEN_DARK}Requested branch for Zigbee:${NC} ${ZIGBEE_BRANCH}"
-        if [[ ${ZIGBEE_BRANCH} = "Master" ]]; then
-            echo -e "${GREEN_DARK}Requested ZSmartSystems library version:${NC} ${ZSMARTSYSTEMS_VERSION}"
-        else
-            echo -e "${GREEN_DARK}Included ZSmartSystems library version:${NC} ${ZSMARTSYSTEMS_VERSION}"
-        fi
+        echo -e "${GREEN_DARK}Requested Zigbee version:${NC} ${ZIGBEE_VERSION}"
+        echo -e "${GREEN_DARK}Requested Zigbee library version:${NC} ${LIBRARY_VERSION}"
     fi
     if [[ ${SILENT} = false ]]; then
         echo; echo -e "${GREEN_DARK}Is this correct?"${NC}
@@ -361,53 +380,57 @@ summary() {
 versions() {
     if [[ ${SILENT} = false ]]; then
         if [[ "${ACTION}" = "Install or upgrade Z-Wave binding" || "${ACTION}" = "Install or upgrade both bindings" ]]; then
-            echo; echo; echo -e "Z-Wave binding: ${GREEN_DARK}from which branch would you like to download from? Snapshots are in Master.${NC}"
-                        echo -e "${BLINKING}Note: DO NOT select Development unless Chris has specifically instructed you to do so!${NC}"
-            select ZWAVE_BRANCH in "Master" "Development" "Exit"; do
-                case $ZWAVE_BRANCH in
-                    "Master" ) break;;
+            echo; echo; echo -e "Z-Wave binding: ${GREEN_DARK}Would you like to download the OpenHAB snapshot or development version?${NC}"
+                        echo -e "${BLINKING}!!!!!${GREY_RED} DO NOT select 'Development' unless Chris has specifically instructed you to do so ${BLINKING}!!!!!${NC}"
+            select ZWAVE_VERSION in "OpenHAB snapshot" "Development" "Exit"; do
+                case $ZWAVE_VERSION in
+                    "OpenHAB snapshot" ) break;;
                     "Development" ) break;;
                     "Exit" ) exit; break;;
                 esac
             done
         fi
-    elif [[ -z "${ZWAVE_BRANCH}" ]]; then # not specified as an argument
-        ZWAVE_BRANCH="Master"
+    elif [[ -z "${ZWAVE_VERSION}" ]]; then # not specified as an argument
+        ZWAVE_VERSION="OpenHAB snapshot"
     fi
 
     if [[ ${SILENT} = false ]]; then
         if [[ "${ACTION}" = "Install or upgrade Zigbee binding" || "${ACTION}" = "Install or upgrade both bindings" ]]; then
-            echo; echo; echo -e "Zigbee binding: ${GREEN_DARK}From which branch would you like to download from? Snapshots are in Master.${NC}"
-            select ZIGBEE_BRANCH in "Master" "Development" "Exit"; do
-                case $ZIGBEE_BRANCH in
-                    "Master" ) break;;
-                    "Development" ) break;;
+            echo; echo; echo -e "Zigbee binding: ${GREEN_DARK}The OpenHAB snapshot binding will be downloaded, but Which libraries would you like to use?${NC}"
+                        echo -e "${BLINKING}!!!!!${GREY_RED} DO NOT select 'ZigBee Library snapshot' unless Chris has specifically instructed you to do so ${BLINKING}!!!!!${NC}"
+            select ZIGBEE_VERSION in "OpenHAB baseline (included in OpenHAB snapshot)" "ZigBee Library release (pre-OpenHAB snapshot)" "ZigBee Library snapshot (still in development)" "Exit"; do
+                case $ZIGBEE_VERSION in
+                    "OpenHAB baseline (included in OpenHAB snapshot)" ) break;;
+                    "ZigBee Library release (pre-OpenHAB snapshot)" ) break;;
+                    "ZigBee Library snapshot (still in development)" ) break;;
                     "Exit" ) exit; break;;
                 esac
             done
         fi
-    elif [[ -z "${ZIGBEE_BRANCH}" ]]; then # not specified as an argument
-        ZIGBEE_BRANCH="Master"
+    elif [[ -z "${ZIGBEE_VERSION}" ]]; then # not specified as an argument
+        ZIGBEE_VERSION="OpenHAB baseline (included in OpenHAB snapshot)"
     fi
 
     if [[ "${ACTION}" =~ "Install or upgrade" ]]; then
-        #OH_VERSION=$(wget -nv -q -O- 'https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding$org.openhab.binding.zigbee/console' | grep -a "Building ZigBee Binding" | grep -aoP "[0-9].*[0-9]")
-        OH_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://ci.openhab.org/job/openHAB-Distribution/lastSuccessfulBuild/console" | grep -a "Building openHAB" | head -n1 | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
+        #OH_VERSION=$(wget -nv -q -O- "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding$org.openhab.binding.zigbee/console" | grep -a "Building ZigBee Binding" | grep -aoP "[0-9].*[0-9]")
+        OH_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://ci.openhab.org/job/openHAB-Distribution/lastSuccessfulBuild/console" | grep -a "Building openHAB" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+")
 
     fi
 
-    if [[ -z "${ZSMARTSYSTEMS_VERSION}" && ("${ACTION}" = "Install or upgrade Zigbee binding" || "${ACTION}" = "Install or upgrade both bindings") ]]; then
-        if [[ "${ZIGBEE_BRANCH}" = "Master" ]]; then
-            ZSMARTSYSTEMS_VERSION=$(curl -s --connect-timeout 10 --max-time 10 'https://raw.githubusercontent.com/openhab/openhab-distro/master/features/addons/src/main/feature/feature.xml' | grep -a "com.zsmartsystems.zigbee.dongle.ember" | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
+    if [[ -z "${LIBRARY_VERSION}" && ("${ACTION}" = "Install or upgrade Zigbee binding" || "${ACTION}" = "Install or upgrade both bindings") ]]; then
+        if [[ "${ZIGBEE_VERSION}" = "OpenHAB baseline (included in OpenHAB snapshot)" ]]; then
+            LIBRARY_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://raw.githubusercontent.com/openhab/openhab-distro/master/features/addons/src/main/feature/feature.xml" | grep -a "com.zsmartsystems.zigbee.dongle.ember" | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
+        elif [[ "${ZIGBEE_VERSION}" = "ZigBee Library release (pre-OpenHAB snapshot)" ]]; then
+            #LIBRARY_VERSION=$(wget -nv -q -O- "https://bintray.com/zsmartsystems/com.zsmartsystems/zigbee/_latestVersion" | grep -oP "[0-9].*[0-9]$")
+            LIBRARY_VERSION=$(curl -Ls --connect-timeout 10 --max-time 10 -o /dev/null -w %{url_effective} "https://bintray.com/zsmartsystems/com.zsmartsystems/zigbee/_latestVersion" | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
         else
-            #ZSMARTSYSTEMS_VERSION=$(wget -nv -q -O- 'https://bintray.com/zsmartsystems/com.zsmartsystems/zigbee/_latestVersion' | grep -oP "[0-9].*[0-9]$")
-            ZSMARTSYSTEMS_VERSION=$(curl -Ls --connect-timeout 10 --max-time 10 -o /dev/null -w %{url_effective} 'https://bintray.com/zsmartsystems/com.zsmartsystems/zigbee/_latestVersion' | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
+            LIBRARY_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+")
         fi
-        if [[ ${SILENT} = false && "${ZIGBEE_BRANCH}" = "Development" ]]; then
-            echo; echo; echo -e "${GREEN_DARK}Note: the development Zigbee libraries may not yet be compatible with the current openHAB Zigbee binding"
-            echo -e "or bridges. Enter the requested version of the development ZSmartSystems libraries [clear field to exit]${NC}"
-            read -e -p "[Use backspace to modify, enter to accept. The latest development version is ${ZSMARTSYSTEMS_VERSION}.] " -i "${ZSMARTSYSTEMS_VERSION}" ZSMARTSYSTEMS_VERSION
-            if [[ -z "${ZSMARTSYSTEMS_VERSION}" ]]; then
+        if [[ ${SILENT} = false && "${ZIGBEE_VERSION}" != "OpenHAB baseline (included in OpenHAB snapshot)" ]]; then
+            echo; echo; echo -e "${GREEN_DARK}Note: the pre-OpenHAB snapshot Zigbee libraries may not yet be compatible with the current openHAB snapshot Zigbee binding"
+                        echo -e "or bridges. Enter the requested version of the Zigbee libraries [clear field to exit]${NC}"
+            read -e -p "[Use backspace to modify, enter to accept. The latest version is ${LIBRARY_VERSION}.] " -i "${LIBRARY_VERSION}" LIBRARY_VERSION
+            if [[ -z "${LIBRARY_VERSION}" ]]; then
                 exit
             fi
         fi
@@ -415,7 +438,7 @@ versions() {
     summary
 }
 
-addonsCheck() {
+addonsCfgCheck() {
     if [[ "${ACTION}" =~ "Uninstall" || "${ACTION}" =~ "Zigbee" || "${ACTION}" =~ "both" || "${ACTION}" =~ "Z-Wave" ]]; then
         binding=`grep "^binding" ../conf/services/addons.cfg`
         if [[ "${binding}" =~ "zwave" ]]; then
@@ -434,7 +457,7 @@ menu() {
     if [[ ${SILENT} = false ]]; then
         clear
         if [[ "${CURRENT_ACCOUNT}" != "openhab" ]]; then
-            echo; echo -e "${BLINKING}!!!!!${GREY_RED} This script MUST be executed by the account that runs openHAB, typically \"openhab\" ${BLINKING}!!!!!${NC}"
+            echo; echo -e "${BLINKING}!!!!!${GREY_RED} This script MUST be executed by the account that runs openHAB, typically 'openhab' ${BLINKING}!!!!!${NC}"
             select choice in "Continue (my openHAB account is \"${CURRENT_ACCOUNT}\")" "Exit"; do
                 case $choice in
                     "Continue (my openHAB account is \"${CURRENT_ACCOUNT}\")" ) break;;
@@ -459,7 +482,7 @@ menu() {
         done
 
     fi
-    addonsCheck
+    addonsCfgCheck
 }
 
 menu
