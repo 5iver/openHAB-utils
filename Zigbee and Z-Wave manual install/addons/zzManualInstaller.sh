@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-SCRIPT_VERSION=1.0.0
+SCRIPT_VERSION=1.0.1
 
 GREY_RED='\033[0;37;41m'
 GREEN_DARK='\033[0;32;40m'
@@ -516,17 +516,17 @@ updateScript() {
 versionCheck() {
     if [[ ${SILENT} = false ]]; then
         CURRENT_RELEASE=$(curl -s --connect-timeout 10 --max-time 10 "https://github.com/openhab-5iver/openHAB-utils/releases/latest" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+")
-        if [[ -n ${CURRENT_RELEASE} && "${SCRIPT_VERSION}" = "${CURRENT_RELEASE}" ]]; then
+        if [[ -z ${CURRENT_RELEASE} || "${SCRIPT_VERSION}" = "${CURRENT_RELEASE}" ]]; then
             menu
         else
             clear; 
             echo; echo "Script version:  ${SCRIPT_VERSION}"
             echo "Current release: ${CURRENT_RELEASE}"
             echo; echo -e "${BLINKING}!!!!!${GREY_RED} There is a newer version of the script available ${BLINKING}!!!!!${NC}"
-            select choice in "Download and upgrade script" "Do not upgrade script and continue" "Exit"; do
+            select choice in "Upgrade script" "Do not upgrade script" "Exit"; do
                 case $choice in
-                    "Download and upgrade script" ) updateScript ${CURRENT_RELEASE}; break;;
-                    "Do not upgrade script and continue" ) menu;;
+                    "Upgrade script" ) updateScript ${CURRENT_RELEASE}; break;;
+                    "Do not upgrade script" ) menu;;
                     "Exit" ) exit; break;;
                 esac
             done
