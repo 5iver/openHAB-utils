@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-SCRIPT_VERSION=1.0.1
+SCRIPT_VERSION=1.0.0
 
 GREY_RED='\033[0;37;41m'
 GREEN_DARK='\033[0;32;40m'
