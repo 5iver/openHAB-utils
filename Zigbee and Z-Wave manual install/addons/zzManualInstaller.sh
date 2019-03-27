@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-SCRIPT_VERSION=1.0.0
+SCRIPT_VERSION=1.0.1
 
 GREY_RED='\033[0;37;41m'
 GREEN_DARK='\033[0;32;40m'
@@ -449,22 +449,24 @@ versions() {
 }
 
 addonsCfgCheck() {
-    if [[ "${ACTION}" =~ "Uninstall" || "${ACTION}" =~ "Zigbee" || "${ACTION}" =~ "both" || "${ACTION}" =~ "Z-Wave" ]]; then
-        APTGET="/etc/openhab2/services/addons.cfg"
-        MANUAL="../conf/services/addons.cfg"
-        if [[ -f ${APTGET} ]]; then
-            ADDONSCFG=${APTGET}
-        elif [[ -f ${MANUAL} ]]; then
-            ADDONSCFG=${MANUAL}
-        fi
-        if [[ -n ${ADDONSCFG} ]]; then
-            binding=`grep "^binding" ${ADDONSCFG}`
-            if [[ "${binding}" =~ "caldav" ]]; then
-                echo; echo -e "${BLINKING}!!!!!${GREY_RED} You must remove the Z-Wave binding from the 'binding' line in ${ADDONSCFG} ${BLINKING}!!!!!${NC}"; echo
-                exit
-            elif [[ "${binding}" =~ "zigbee" ]]; then
-                echo; echo -e "${BLINKING}!!!!!${GREY_RED} You must remove the Zigbee binding from the 'binding' line in ${ADDONSCFG} ${BLINKING}!!!!!${NC}"; echo
-                exit
+    if [[ ${SILENT} = false ]]; then
+        if [[ "${ACTION}" =~ "Uninstall" || "${ACTION}" =~ "Zigbee" || "${ACTION}" =~ "both" || "${ACTION}" =~ "Z-Wave" ]]; then
+            APTGET="/etc/openhab2/services/addons.cfg"
+            MANUAL="../conf/services/addons.cfg"
+            if [[ -f ${APTGET} ]]; then
+                ADDONSCFG=${APTGET}
+            elif [[ -f ${MANUAL} ]]; then
+                ADDONSCFG=${MANUAL}
+            fi
+            if [[ -n ${ADDONSCFG} ]]; then
+                binding=`grep "^binding" ${ADDONSCFG}`
+                if [[ "${binding}" =~ "zwave" && ("${ACTION}" =~ "Z-Wave" || "${ACTION}" =~ "both") ]]; then
+                    echo; echo -e "${BLINKING}!!!!!${GREY_RED} You must remove the Z-Wave binding from the 'binding' line in ${ADDONSCFG} ${BLINKING}!!!!!${NC}"; echo
+                    exit
+                elif [[ "${binding}" =~ "zigbee" && ("${ACTION}" =~ "Zigbee" || "${ACTION}" =~ "both") ]]; then
+                    echo; echo -e "${BLINKING}!!!!!${GREY_RED} You must remove the Zigbee binding from the 'binding' line in ${ADDONSCFG} ${BLINKING}!!!!!${NC}"; echo
+                    exit
+                fi
             fi
         fi
     fi
