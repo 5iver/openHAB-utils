@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-SCRIPT_VERSION=1.0.1
+SCRIPT_VERSION=1.0.2
 
 GREY_RED='\033[0;37;41m'
 GREEN_DARK='\033[0;32;40m'
@@ -252,8 +252,10 @@ uninstall() {
                 mv -f *zigbee*.jar ${ADDONS}/archive/zigbee/
             fi
             cd ${ADDONS}/archive/zigbee
-            rename .jar .${current_time}.old *zigbee*
-            #echo " done."
+            #rename .jar .${current_time}.old *zigbee*
+            for file in *.jar; do
+                mv "${file}" "${file%.jar}.${current_time}.old"
+            done
         fi
         if [[ "${ACTION}" =~ "Z-Wave" || "${ACTION}" =~ "both" ]]; then
             echo; echo -e ${BLUE_DARK}"Backing up and uninstalling any unmanaged installs of Z-Wave..."${NC}
@@ -263,8 +265,10 @@ uninstall() {
                 mv -f *zwave*.jar ${ADDONS}/archive/zwave/
             fi
             cd ${ADDONS}/archive/zwave
-            rename .jar .${current_time}.old *zwave*
-            #echo " done."
+            #rename .jar .${current_time}.old *zwave*
+            for file in *.jar; do
+                mv "${file}" "${file%.jar}.${current_time}.old"
+            done
         fi
         COUNT=0
         ZIGBEE_UNINSTALLED=false
