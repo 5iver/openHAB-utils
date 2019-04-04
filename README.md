@@ -6,13 +6,18 @@ Utilities for use with [openHAB](https://www.openhab.org/)
   
 _**NOTE: The development Z-Wave binding has been [merged into the master branch](https://community.openhab.org/t/zwave-binding-updates/51080), so only choose the development branch for Z-Wave if Chris has instructed you to do so (he may throw a test jar out there).**_
 
-  This script is interactive and will prompt for input. It must be copied to, and executed from, the addons directory on the openHAB server, **using the same account that runs openHAB**. After downloading, be sure to set the permissions so that it can be executed (`chmod u+x zzManualInstall.sh`), or run it with `bash zzManualInstall.sh`. At this time, there is very little error checking in the case of a failure in the script, so you should verify that it has run successfully when it completes, i.e. run `list -s | grep -i zig` in Karaf. This script can:
+  This script is interactive and will prompt for input. It must be copied to, and executed from, the addons directory on the openHAB server, **using the same account that runs openHAB**. 
+  After downloading, be sure to set the permissions so that it can be executed (`chmod u+x zzManualInstall.sh`), or run it with `bash zzManualInstall.sh`. 
+  If using a package installation (like openHABian), execute the script with `sudo -E -u openhab bash zzManualInstaller.sh`. 
+  At this time, there is very little error checking in the case of a failure in the script, so you should verify that it has run successfully when it completes, i.e. run `list -s | grep -i zig` in Karaf. 
+  This script can:
   * Download and manually install/upgrade the current snapshot or development Zigbee binding, with a chosen version of the [ZsmartSystems libraries](https://github.com/zsmartsystems/com.zsmartsystems.zigbee)
   * Download and manually install/upgrade the snapshot or development version of the [Z-Wave binding](https://github.com/openhab/org.openhab.binding.zwave/tree/development)
   * Uninstall existing versions of the bindings. If they were manually installed, the jars are first backed up.
   * Install openhab-transport-serial
   
-  If you would prefer to not use the menu driven interface, you can use it from the commandline. This is useful if you would like to execute it from a rule. Currently, only installs/upgrades can be performed when running from commandline. 
+  If you would prefer to not use the menu driven interface, you can use it from the commandline. 
+  This is useful if you would like to execute it from a rule. Currently, only installs/upgrades can be performed when running from commandline. 
   
 Here is the output of `zzManualInstal.sh --help`...
 ```
