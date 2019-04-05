@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-SCRIPT_VERSION=1.0.2
+SCRIPT_VERSION=1.1.0
 
 GREY_RED='\033[0;37;41m'
 GREEN_DARK='\033[0;32;40m'
@@ -249,26 +249,20 @@ uninstall() {
             cd ${ADDONS}
             mkdir -p ${ADDONS}/archive/zigbee
             if [[ 0 -lt $(ls *zigbee*.jar 2>/dev/null | wc -w) ]]; then
-                mv -f *zigbee*.jar ${ADDONS}/archive/zigbee/
+                for file in *zigbee*.jar; do
+                    mv -f "${file}" "${ADDONS}/archive/zigbee/${file%.jar}.${current_time}.old"
+                done
             fi
-            cd ${ADDONS}/archive/zigbee
-            #rename .jar .${current_time}.old *zigbee*
-            for file in *.jar; do
-                mv "${file}" "${file%.jar}.${current_time}.old"
-            done
         fi
         if [[ "${ACTION}" =~ "Z-Wave" || "${ACTION}" =~ "both" ]]; then
             echo; echo -e ${BLUE_DARK}"Backing up and uninstalling any unmanaged installs of Z-Wave..."${NC}
             cd ${ADDONS}
             mkdir -p ${ADDONS}/archive/zwave
             if [[ 0 -lt $(ls *zwave*.jar 2>/dev/null | wc -w) ]]; then
-                mv -f *zwave*.jar ${ADDONS}/archive/zwave/
+                for file in *zwave*.jar; do
+                    mv -f "${file}" "${ADDONS}/archive/zwave/${file%.jar}.${current_time}.old"
+                done
             fi
-            cd ${ADDONS}/archive/zwave
-            #rename .jar .${current_time}.old *zwave*
-            for file in *.jar; do
-                mv "${file}" "${file%.jar}.${current_time}.old"
-            done
         fi
         COUNT=0
         ZIGBEE_UNINSTALLED=false
@@ -353,7 +347,11 @@ karaf() {
     #ssh -p 8101 -o StrictHostKeyChecking=no -l ${KARAF_ACCOUNT} localhost ${KARAF_FUNCTION}
     # invoke the client command since we are running on localhost
     cd ${ADDONS}
-    ../runtime/bin/client ${KARAF_FUNCTION} --
+    if [[ -f "/usr/bin/openhab-cli" ]]; then
+        /usr/bin/openhab-cli console ${KARAF_FUNCTION} --
+    else
+        ../runtime/bin/client ${KARAF_FUNCTION} --
+    fi
     if [[ !("${ACTION}" =~ "transport") ]]; then
         echo -e ${GREEN_DARK}"... a 'No matching bundles' error mesage is normal, if a binding had not been previously installed.${NC}"
     fi
