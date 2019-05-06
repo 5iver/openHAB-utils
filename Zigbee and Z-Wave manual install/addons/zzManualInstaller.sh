@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-SCRIPT_VERSION=1.1.0
+SCRIPT_VERSION=1.2.0
 
 GREY_RED='\033[0;37;41m'
 GREEN_DARK='\033[0;32;40m'
@@ -11,10 +11,10 @@ NC='\033[0m' # Reset
 SILENT=false
 introText() {
     echo; echo "Script version: ${SCRIPT_VERSION}"
-    echo; echo -e "${GREEN_DARK}This script is capable of downloading and manually installing the latest development or snapshot builds of the Z-Wave and Zigbee bindings, and/or the openhab-transport-serial"
+    echo; echo -e "${GREEN_DARK}This script is capable of downloading and manually installing the latest development or snapshot builds of the Z-Wave and Zigbee bindings, and/or the openhab-core-io-transport-serial"
     echo "feature. The script must reside inside the addons folder and be executed on the machine running OpenHAB. Before a binding is installed, any previous versions will be"
     echo "uninstalled. Any manually installed versions will also be backed up by moving them to /addons/archive. The installation of any binding will also include the installation"
-    echo -e "of the openhab-transport-serial feature. After using this script, you can uninstall the bindings by deleting their jars from addons, or you can use this script.${NC}"
+    echo -e "of the openhab-core-io-transport-serial feature. After using this script, you can uninstall the bindings by deleting their jars from addons, or you can use this script.${NC}"
     echo; echo -e "${BLINKING}!!!!!${GREY_RED} If you have manually added the Zigbee or Z-Wave binding to your addons.cfg file, they must be removed from the file or the old version will reinstall ${BLINKING}!!!!!${NC}"
 }
 for WORD; do
@@ -32,7 +32,7 @@ for WORD; do
                     elif [[ "${ACTION,,}" = "both" ]]; then
                         ACTION="Install or upgrade both bindings"
                     elif [[ "${ACTION,,}" = "transport" ]]; then
-                        ACTION="Install the openhab-transport-serial feature"
+                        ACTION="Install the openhab-core-io-transport-serial feature"
                     fi
                     shift 2
                     #echo "ACTION=${ACTION}"
@@ -185,9 +185,12 @@ install() {
     fi
     echo; echo -e ${BLUE_DARK}"Complete!"${NC}; echo
     if [[ "${ACTION}" =~ "Install or upgrade Z-Wave" || "${ACTION}" =~ "Install or upgrade both" ]]; then
-        echo -e ${GREEN_DARK}"You've installed, upgraded, or downgraded the Z-Wave binding. For first time installations or downgrades to the snapshot or development binding, it is"
+        echo -e ${GREEN_DARK}"You have installed, upgraded, or downgraded the Z-Wave binding. For first time installations or downgrades to the snapshot or development binding, it is"
                      echo -e "required that all of your Z-Wave Things (except for the controller) be deleted and rediscovered. This does not mean excluding the devices. This is a requirement"
-                     echo -e "due to changes in how the Things aredefined. This is also recommended when the Z-Wave binding is upgraded, in order to update the Thing definitions for installed devices.${NC}"; echo
+                     echo -e "due to changes in how the Things are defined. This is also recommended when the Z-Wave binding is upgraded, in order to update the Thing definitions for installed devices.${NC}"; echo
+    fi
+    if [[ "${ACTION}" =~ "Install or upgrade Zigbee" || "${ACTION}" =~ "Install or upgrade both" ]]; then
+        echo -e ${GREEN_DARK}"You have installed, upgraded, or downgraded the Zigbee binding. If the binding does not start, you may need to restart openHAB.${NC}"; echo
     fi
     exit
 }
@@ -218,11 +221,11 @@ download() {
                     curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.xbee.jar" -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.xbee/${LIBRARY_VERSION}/com.zsmartsystems.zigbee.dongle.xbee-${LIBRARY_VERSION}.jar"
                     curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.jar" -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee/${LIBRARY_VERSION}/com.zsmartsystems.zigbee-${LIBRARY_VERSION}.jar"
                 fi
-                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.cc2531.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.cc2531/artifact/org.openhab.binding/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.ember.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.ember/artifact/org.openhab.binding/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.ember-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.telegesis.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.telegesis/artifact/org.openhab.binding/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.xbee.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee.xbee/artifact/org.openhab.binding/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.xbee-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zigbee/artifact/org.openhab.binding/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.cc2531.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.addons.bundles%24org.openhab.binding.zigbee.cc2531/artifact/org.openhab.addons.bundles/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.ember.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.addons.bundles%24org.openhab.binding.zigbee.ember/artifact/org.openhab.addons.bundles/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.ember-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.telegesis.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.addons.bundles%24org.openhab.binding.zigbee.telegesis/artifact/org.openhab.addons.bundles/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.xbee.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.addons.bundles%24org.openhab.binding.zigbee.xbee/artifact/org.openhab.addons.bundles/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.xbee-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.addons.bundles%24org.openhab.binding.zigbee/artifact/org.openhab.addons.bundles/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee-${OH_VERSION}-SNAPSHOT.jar"
                 echo " done."
             fi
         fi
@@ -233,10 +236,11 @@ download() {
             if [[ "${ZWAVE_VERSION}" = "Development" ]]; then
                 curl -s --connect-timeout 10 --max-time 60 -O -L "http://www.cd-jackson.com/downloads/openhab2/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
             else
-                curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.binding%24org.openhab.binding.zwave/artifact/org.openhab.binding/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.addons.bundles%24org.openhab.binding.zwave/artifact/org.openhab.addons.bundles/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
             fi
             echo " done."
         fi
+        curl -s --connect-timeout 10 --max-time 60 -O -L "http://central.maven.org/maven2/org/apache/servicemix/bundles/org.apache.servicemix.bundles.xstream/1.4.7_1/org.apache.servicemix.bundles.xstream-1.4.7_1.jar"
     fi
     install
 }
@@ -310,6 +314,9 @@ uninstall() {
                 ((COUNT++))
             fi
         done
+        if [[ "${ACTION}" =~ "Uninstall" ]]; then
+            echo; echo -e ${GREEN_DARK}"If the xstream jar is no longer required by any of your other manually installed bindings, you can remove it"${NC}
+        fi
     fi
     download
 }
@@ -334,13 +341,14 @@ karaf() {
     fi
     if [[ "${ACTION}" =~ "Install" ]]; then
         KARAF_FUNCTION="${KARAF_FUNCTION}
-            feature:install openhab-transport-serial;"
+            feature:install openhab-core-io-transport-serial;
+            feature:install openhab-core-config-discovery-usbserial;"
     fi
     #echo "DEBUG: ${KARAF_FUNCTION}"
     if [[ "${ACTION}" =~ "transport" ]]; then
-        echo; echo -e ${BLUE_DARK}"Installing openhab-serial-transport..."${NC}
+        echo; echo -e ${BLUE_DARK}"Installing serial transport..."${NC}
     elif [[ "${ACTION}" =~ "Install" ]]; then
-        echo; echo -e ${BLUE_DARK}"Uninstalling any managed binding(s) and installing openhab-serial-transport..."${NC}
+        echo; echo -e ${BLUE_DARK}"Uninstalling any managed binding(s) and installing serial transport..."${NC}
     else
         echo; echo -e ${BLUE_DARK}"Uninstalling any managed binding(s)..."${NC}
     fi
@@ -491,12 +499,12 @@ menu() {
 
         introText
         echo; echo -e "${GREEN_DARK}What would you like to do?${NC}"
-        select ACTION in "Install or upgrade Zigbee binding" "Install or upgrade Z-Wave binding" "Install or upgrade both bindings" "Install the openhab-transport-serial feature" "Uninstall Zigbee binding" "Uninstall Z-Wave binding" "Uninstall both bindings" "Exit"; do
+        select ACTION in "Install or upgrade Zigbee binding" "Install or upgrade Z-Wave binding" "Install or upgrade both bindings" "Install serial transport" "Uninstall Zigbee binding" "Uninstall Z-Wave binding" "Uninstall both bindings" "Exit"; do
             case $ACTION in
                 "Install or upgrade Zigbee binding" ) break;;
                 "Install or upgrade Z-Wave binding" ) break;;
                 "Install or upgrade both bindings" ) break;;
-                "Install the openhab-transport-serial feature" ) break;;
+                "Install serial transport" ) break;;
                 "Uninstall Zigbee binding" ) break;;
                 "Uninstall Z-Wave binding" ) break;;
                 "Uninstall both bindings" ) break;;
