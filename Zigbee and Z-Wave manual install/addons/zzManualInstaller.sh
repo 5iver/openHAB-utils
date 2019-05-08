@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-SCRIPT_VERSION=1.2.0
+SCRIPT_VERSION=1.2.1
 
 GREY_RED='\033[0;37;41m'
 GREEN_DARK='\033[0;32;40m'
@@ -341,8 +341,7 @@ karaf() {
     fi
     if [[ "${ACTION}" =~ "Install" ]]; then
         KARAF_FUNCTION="${KARAF_FUNCTION}
-            feature:install openhab-core-io-transport-serial;
-            feature:install openhab-core-config-discovery-usbserial;"
+            feature:install openhab-transport-serial;"
     fi
     #echo "DEBUG: ${KARAF_FUNCTION}"
     if [[ "${ACTION}" =~ "transport" ]]; then
