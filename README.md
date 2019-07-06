@@ -69,7 +69,10 @@ https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.addo
 https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.addons.bundles%24org.openhab.binding.zigbee/artifact/org.openhab.addons.bundles/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee-${OH_VERSION}-SNAPSHOT.jar
 ```
 7. Back in the Karaf console, install the serial transport feature: `feature:install openhab-transport-serial`
-8. Download xstream and copy the jar file to /addons/... http://central.maven.org/maven2/org/apache/servicemix/bundles/org.apache.servicemix.bundles.xstream/1.4.7_1/org.apache.servicemix.bundles.xstream-1.4.7_1.jar
+8. Download xstream and copy the jar file to /addons/... 
+```
+http://central.maven.org/maven2/org/apache/servicemix/bundles/org.apache.servicemix.bundles.xstream/1.4.7_1/org.apache.servicemix.bundles.xstream-1.4.7_1.jar
+```
 </ul>
 
 ### [Backup and upgrade manual installation](https://github.com/openhab-5iver/openHAB-utils/tree/master/Backup%20and%20upgrade%20manual%20installation)
