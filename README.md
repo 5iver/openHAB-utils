@@ -50,11 +50,11 @@ Here is how to install/upgrade the development Z-Wave binding from commandline..
 2. Check for previously installed versions of the bindings... `list -s | grep zwave` or `list -s | grep zigbee`
 3. Uninstall any previously installed versions of the bindings... `bundle:uninstall org.openhab.binding.zwave` or `bundle:uninstall org.openhab.binding.zigbee`. This may need to be repeated, if multiple versions have been installed. Also, remove zwave and zigbee from the addons.cfg, if you've previously added it there.
 4. Remove any Zigbee or Z-Wave jar files in the `/addons/` directory.
-5. Download the Z-Wave jar and save to `/addons/`. The references to the OH version in this link will need to be updated in the future as the versions change. Replace `${OH_VERSION}` with the current version of OH (i.e., 2.4.0):
+5. Download the Z-Wave jar and save to `/addons/`. The references to the OH version in this link will need to be updated in the future as the versions change. Replace `${OH_VERSION}` with the current snapshot version of OH (i.e., 2.5.0):
 ```
 https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.addons.bundles%24org.openhab.binding.zwave/artifact/org.openhab.addons.bundles/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar)
 ```
-6. For Zigbee, download all of these, or just the ones pertinent to your coordinator (replace `${ZSMARTSYSTEMS_VERSION}` with the current version of the libraries (i.e., 1.1.3) and `${OH_VERSION}` with the current version of OH (i.e., 2.4.0):
+6. For Zigbee, download all of these, or just the ones pertinent to your coordinator (replace `${ZSMARTSYSTEMS_VERSION}` with the current version of the libraries (i.e., 1.2.1) and `${OH_VERSION}` with the current snaphsot version of OH (i.e., 2.5.0):
 ```
 https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee-${ZSMARTSYSTEMS_VERSION}.jar
 https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.xbee/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.xbee-${ZSMARTSYSTEMS_VERSION}.jar
