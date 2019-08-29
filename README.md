@@ -48,7 +48,7 @@ Here is how to install/upgrade the development Z-Wave binding from commandline..
 
 1. Access the Karaf console
 2. Check for previously installed versions of the bindings... `list -s | grep zwave` or `list -s | grep zigbee`
-3. Uninstall any previously installed versions of the bindings... `bundle:uninstall org.openhab.binding.zwave` or `bundle:uninstall org.openhab.binding.zigbee`. This may need to be repeated, if multiple versions have been installed. Also, remove any zwave from the addons.cfg, if you've previously added it there.
+3. Uninstall any previously installed versions of the bindings... `bundle:uninstall org.openhab.binding.zwave` or `bundle:uninstall org.openhab.binding.zigbee`. This may need to be repeated, if multiple versions have been installed. Also, remove zwave and zigbee from the addons.cfg, if you've previously added it there.
 4. Remove any Zigbee or Z-Wave jar files in the `/addons/` directory.
 5. Download the Z-Wave jar and save to `/addons/`. The references to the OH version in this link will need to be updated in the future as the versions change. Replace `${OH_VERSION}` with the current version of OH (i.e., 2.4.0):
 ```
