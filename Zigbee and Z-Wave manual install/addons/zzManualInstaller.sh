@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-SCRIPT_VERSION=1.2.1
+SCRIPT_VERSION=1.2.2
 
 GREY_RED='\033[0;37;41m'
 GREEN_DARK='\033[0;32;40m'
@@ -221,11 +221,11 @@ download() {
                     curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.xbee.jar" -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.xbee/${LIBRARY_VERSION}/com.zsmartsystems.zigbee.dongle.xbee-${LIBRARY_VERSION}.jar"
                     curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.jar" -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee/${LIBRARY_VERSION}/com.zsmartsystems.zigbee-${LIBRARY_VERSION}.jar"
                 fi
-                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.cc2531.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.addons.bundles%24org.openhab.binding.zigbee.cc2531/artifact/org.openhab.addons.bundles/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.ember.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.addons.bundles%24org.openhab.binding.zigbee.ember/artifact/org.openhab.addons.bundles/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.ember-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.telegesis.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.addons.bundles%24org.openhab.binding.zigbee.telegesis/artifact/org.openhab.addons.bundles/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.xbee.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.addons.bundles%24org.openhab.binding.zigbee.xbee/artifact/org.openhab.addons.bundles/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.xbee-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.addons.bundles%24org.openhab.binding.zigbee/artifact/org.openhab.addons.bundles/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.cc2531.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/artifact/bindings/org.openhab.binding.zigbee/org.openhab.binding.zigbee.cc2531/target/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.ember.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/artifact/bindings/org.openhab.binding.zigbee/org.openhab.binding.zigbee.ember/target/org.openhab.binding.zigbee.ember-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.telegesis.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/artifact/bindings/org.openhab.binding.zigbee/org.openhab.binding.zigbee.telegesis/target/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.xbee.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/artifact/bindings/org.openhab.binding.zigbee/org.openhab.binding.zigbee.xbee/target/org.openhab.binding.zigbee.xbee-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/artifact/bindings/org.openhab.binding.zigbee/org.openhab.binding.zigbee/target/org.openhab.binding.zigbee-${OH_VERSION}-SNAPSHOT.jar"
                 echo " done."
             fi
         fi
@@ -236,7 +236,7 @@ download() {
             if [[ "${ZWAVE_VERSION}" = "Development" ]]; then
                 curl -s --connect-timeout 10 --max-time 60 -O -L "http://www.cd-jackson.com/downloads/openhab2/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
             else
-                curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/org.openhab.addons.bundles%24org.openhab.binding.zwave/artifact/org.openhab.addons.bundles/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
+                curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/artifact/bindings/org.openhab.binding.zwave/target/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
             fi
             echo " done."
         fi
@@ -367,7 +367,7 @@ karaf() {
 
 summary() {
     if [[ ${SILENT} = false ]]; then
-        clear; 
+        clear;
     fi
     echo; echo -e "     ${BLACK_WHITE}*****     SUMMARY     *****${NC}     "; echo
     echo -e "${GREEN_DARK}Addons path:${NC} ${ADDONS}"
@@ -530,7 +530,7 @@ versionCheck() {
         if [[ -z ${CURRENT_RELEASE} || "${SCRIPT_VERSION}" = "${CURRENT_RELEASE}" ]]; then
             menu
         else
-            clear; 
+            clear;
             echo; echo "Script version:  ${SCRIPT_VERSION}"
             echo "Current release: ${CURRENT_RELEASE}"
             echo; echo -e "${BLINKING}!!!!!${GREY_RED} There is a newer version of the script available ${BLINKING}!!!!!${NC}"
