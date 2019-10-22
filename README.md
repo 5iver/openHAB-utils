@@ -7,7 +7,7 @@ Utilities for use with [openHAB](https://www.openhab.org/)
 _**NOTE: The development Z-Wave binding has been [merged into the master branch](https://community.openhab.org/t/zwave-binding-updates/51080), so only choose the development branch for Z-Wave if Chris has instructed you to do so (he may throw a test jar out there).**_
 
   This script is interactive and will prompt for input. It must be copied to, and executed from, the addons directory on the openHAB server, **using the same account that runs openHAB**. 
-  After downloading, be sure to set the permissions so that it can be executed (`chmod u+x zzManualInstall.sh`), or run it with `bash zzManualInstall.sh`. 
+  After downloading, be sure to set the permissions so that it can be executed (`chmod u+x zzManualInstaller.sh`), or run it with `bash zzManualInstaller.sh`. 
   If using a package installation (like openHABian), execute the script with `sudo -E -u openhab bash zzManualInstaller.sh`. 
   At this time, there is very little error checking in the case of a failure in the script, so you should verify that it has run successfully when it completes, e.g. run `list -s | grep -i zig` in Karaf. 
   This script can:
@@ -19,7 +19,7 @@ _**NOTE: The development Z-Wave binding has been [merged into the master branch]
   If you would prefer to not use the menu driven interface, you can use it from the commandline. 
   This is useful if you would like to execute it from a rule. Currently, only installs/upgrades can be performed when running from commandline. 
   
-Here is the output of `zzManualInstal.sh --help`...
+Here is the output of `zzManualInstaller.sh --help`...
 ```
 This script is capable of downloading and manually installing the latest development or master branch builds of the Z-Wave and Zigbee bindings, and/or the openhab-transport-serial
 feature. The script must reside inside the addons folder and be executed on the machine running OH. Before a binding is installed, any previous versions will be
@@ -41,7 +41,7 @@ If executed without the ACTION argument, menus will be displayed for each option
 
 Here is how to install/upgrade the development Z-Wave binding from commandline...
 
-    bash zzManualInstall.sh --ACTION zwave --ZWAVE_BRANCH development
+    bash zzManualInstaller.sh --ACTION zwave --ZWAVE_BRANCH development
 
 
 **Here are the steps this script performs, and which you could choose to do manually**
