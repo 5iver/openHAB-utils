@@ -50,23 +50,26 @@ Here is how to install/upgrade the development Z-Wave binding from commandline..
 2. Check for previously installed versions of the bindings... `list -s | grep zwave` or `list -s | grep zigbee`
 3. Uninstall any previously installed versions of the bindings... `bundle:uninstall org.openhab.binding.zwave` or `bundle:uninstall org.openhab.binding.zigbee`. This may need to be repeated, if multiple versions have been installed. Also, remove zwave and zigbee from the addons.cfg, if you've previously added it there.
 4. Remove any Zigbee or Z-Wave jar files in the `/addons/` directory.
-5. Download the Z-Wave jar and save to `/addons/`. The references to the OH version in this link will need to be updated in the future as the versions change. Replace `${OH_VERSION}` with the current snapshot version of OH (e.g., 2.5.0) and `${OH_VERSION_MAJOR_MINOR}` with the current OH Major.Minor version (e.g., 2.5):
+5. Download the Z-Wave jar and save to `/addons/`. The reference to `${BUILD_NUMBER}` should be replaced with the number that will be found by going to the parent page and getting the highest build number on that page.
 ```
-https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION_MAJOR_MINOR}/org/openhab/addons/bundles/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar
+https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zwave/2.5.2-SNAPSHOT/org.openhab.binding.zwave-2.5.2-${BUILD_NUMBER}.jar
 ```
-6. For Zigbee, download all of these, or just the ones pertinent to your coordinator (replace `${ZSMARTSYSTEMS_VERSION}` with the current version of the libraries (e.g., 1.2.1), `${OH_VERSION}` with the current snaphsot version of OH (e.g., 2.5.0), and `${OH_VERSION_MAJOR_MINOR}` with the current OH Major.Minor version (e.g., 2.5):
+6. For Zigbee, download all of these, or just the ones pertinent to your coordinator. Replace all references to `${ZSMARTSYSTEMS_VERSION}` with the current version of the libraries (e.g., 1.2.1), `${OH_VERSION}` with the current snaphsot version of OH (e.g., 2.5.0), `${OH_VERSION_MAJOR_MINOR}` with the current OH Major.Minor version (e.g., 2.5), and `${BUILD_NUMBER}` with the number that will be found by going to the parent page and getting the highest build number on that page.
 ```
+These URLs are not currently correct after 2.5.1-2.
+Look into the script to find the new URLs.
+
 https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee-${ZSMARTSYSTEMS_VERSION}.jar
 https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.xbee/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.xbee-${ZSMARTSYSTEMS_VERSION}.jar
 https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.ember/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.ember-${ZSMARTSYSTEMS_VERSION}.jar
 https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.telegesis/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.telegesis-${ZSMARTSYSTEMS_VERSION}.jar
 https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.cc2531/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.cc2531-${ZSMARTSYSTEMS_VERSION}.jar
 
-https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION_MAJOR_MINOR}/org/openhab/addons/bundles/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-SNAPSHOT.jar
-https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION_MAJOR_MINOR}/org/openhab/addons/bundles/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.ember-${OH_VERSION}-SNAPSHOT.jar
-https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION_MAJOR_MINOR}/org/openhab/addons/bundles/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-SNAPSHOT.jar
-https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION_MAJOR_MINOR}/org/openhab/addons/bundles/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.xbee-${OH_VERSION}-SNAPSHOT.jar
-https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION_MAJOR_MINOR}/org/openhab/addons/bundles/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee-${OH_VERSION}-SNAPSHOT.jar
+https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-${BUILD_NUMBER}.jar
+https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.ember-${OH_VERSION}-${BUILD_NUMBER}.jar
+https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-${BUILD_NUMBER}.jar
+https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.xbee-${OH_VERSION}-${BUILD_NUMBER}.jar
+https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee-${OH_VERSION}-${BUILD_NUMBER}.jar
 ```
 7. Back in the Karaf console, install the serial transport feature: `feature:install openhab-transport-serial`
 8. Download xstream and copy the jar file to /addons/... 
