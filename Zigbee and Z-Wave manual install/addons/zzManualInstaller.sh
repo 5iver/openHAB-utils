@@ -1,18 +1,24 @@
 #!/usr/bin/env bash
-SCRIPT_VERSION=1.2.3
+SCRIPT_VERSION=1.2.4
 
 GREY_RED='\033[0;37;41m'
 GREEN_DARK='\033[0;32;40m'
 BLUE_DARK='\033[1;34;40m'
-BLACK_WHITE='\033[0;30;47m'
+BLACK_WHITE='\033[1;30;47m'
+RED_WHITE='\033[1;31;47m'
 BLINKING='\033[5;37;41m'
 NC='\033[0m' # Reset
 
 SILENT=false
 introText() {
+    echo; echo -e ${RED_WHITE}"                                                      "
+          echo -e ${RED_WHITE}"          Like this script?  I like BEER!!!!          "
+          echo -e ${RED_WHITE}"                                                      "
+        echo -e ${BLACK_WHITE}"           https://paypal.me/ScottRushworth           "
+          echo -e ${RED_WHITE}"                                                      "${NC}
     echo; echo "Script version: ${SCRIPT_VERSION}"
     echo; echo -e "${GREEN_DARK}This script is capable of downloading and manually installing the latest development or snapshot builds of the Z-Wave and Zigbee bindings, and/or the openhab-core-io-transport-serial"
-    echo "feature. The script must reside inside the addons folder and be executed on the machine running OpenHAB. Before a binding is installed, any previous versions will be"
+    echo "feature. The script must reside inside the addons folder and be executed on the machine running openHAB. Before a binding is installed, any previous versions will be"
     echo "uninstalled. Any manually installed versions will also be backed up by moving them to /addons/archive. The installation of any binding will also include the installation"
     echo -e "of the openhab-core-io-transport-serial feature. After using this script, you can uninstall the bindings by deleting their jars from addons, or you can use this script.${NC}"
     echo; echo -e "${BLINKING}!!!!!${GREY_RED} If you have manually added the Zigbee or Z-Wave binding to your addons.cfg file, they must be removed from the file or the old version will reinstall ${BLINKING}!!!!!${NC}"
@@ -51,7 +57,7 @@ for WORD; do
                 ZWAVE_VERSION="${ZWAVE_VERSION[@]^}"# title case
                 if [[ "${ZWAVE_VERSION}" = "Development" || "${ZWAVE_VERSION}" = "Snapshot" ]]; then
                     if [[ "${ZWAVE_VERSION}" = "Snapshot" ]]; then
-                        ZWAVE_VERSION="OpenHAB snapshot"
+                        ZWAVE_VERSION="openHAB snapshot"
                     fi
                     shift 2
                     #echo "ZWAVE_VERSION=${ZWAVE_VERSION,,}"
@@ -70,9 +76,9 @@ for WORD; do
                 ZIGBEE_VERSION="${ZIGBEE_VERSION[@]^}"# title case
                 if [[ "${ZIGBEE_VERSION}" = "Snapshot" || "${ZIGBEE_VERSION}" = "Release" || "${ZIGBEE_VERSION}" = "Prerelease" ]]; then
                     if [[ "${ZIGBEE_VERSION}" = "Snapshot" ]]; then
-                        ZIGBEE_VERSION="OpenHAB baseline (included in OpenHAB snapshot)"
+                        ZIGBEE_VERSION="openHAB baseline (included in openHAB snapshot)"
                     elif [[ "${ZIGBEE_VERSION}" = "Release" ]]; then
-                        ZIGBEE_VERSION="ZigBee Library release (pre-OpenHAB snapshot)"
+                        ZIGBEE_VERSION="ZigBee Library release (pre-openHAB snapshot)"
                     elif [[ "${ZIGBEE_VERSION}" = "Prerelease" ]]; then
                         ZIGBEE_VERSION="ZigBee Library snapshot (still in development)"
                     fi
@@ -222,15 +228,25 @@ download() {
                     curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.jar" -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee/${LIBRARY_VERSION}/com.zsmartsystems.zigbee-${LIBRARY_VERSION}.jar"
                 fi
                 #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.cc2531.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/artifact/bindings/org.openhab.binding.zigbee/org.openhab.binding.zigbee.cc2531/target/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.cc2531.jar" -L "https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION/%\.0/}/org/openhab/addons/bundles/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-SNAPSHOT.jar"
+                #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.cc2531.jar" -L "https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION/%\.0/}/org/openhab/addons/bundles/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-SNAPSHOT.jar"
+                BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.cc2531/2.5.2-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.cc2531.jar" -L "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.cc2531/2.5.2-SNAPSHOT/org.openhab.binding.zigbee.cc2531-2.5.2-${BUILD_NUMBER}.jar"
                 #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.ember.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/artifact/bindings/org.openhab.binding.zigbee/org.openhab.binding.zigbee.ember/target/org.openhab.binding.zigbee.ember-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.ember.jar" -L "https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION/%\.0/}/org/openhab/addons/bundles/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.ember-${OH_VERSION}-SNAPSHOT.jar"
+                #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.ember.jar" -L "https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION/%\.0/}/org/openhab/addons/bundles/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.ember-${OH_VERSION}-SNAPSHOT.jar"
+                BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.ember/2.5.2-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.ember.jar" -L "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.ember/2.5.2-SNAPSHOT/org.openhab.binding.zigbee.ember-2.5.2-${BUILD_NUMBER}.jar"
                 #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.telegesis.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/artifact/bindings/org.openhab.binding.zigbee/org.openhab.binding.zigbee.telegesis/target/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.telegesis.jar" -L "https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION/%\.0/}/org/openhab/addons/bundles/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-SNAPSHOT.jar"
+                #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.telegesis.jar" -L "https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION/%\.0/}/org/openhab/addons/bundles/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-SNAPSHOT.jar"
+                BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.telegesis/2.5.2-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.telegesis.jar" -L "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.telegesis/2.5.2-SNAPSHOT/org.openhab.binding.zigbee.telegesis-2.5.2-${BUILD_NUMBER}.jar"
                 #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.xbee.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/artifact/bindings/org.openhab.binding.zigbee/org.openhab.binding.zigbee.xbee/target/org.openhab.binding.zigbee.xbee-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.xbee.jar" -L "https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION/%\.0/}/org/openhab/addons/bundles/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.xbee-${OH_VERSION}-SNAPSHOT.jar"
+                #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.xbee.jar" -L "https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION/%\.0/}/org/openhab/addons/bundles/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.xbee-${OH_VERSION}-SNAPSHOT.jar"
+                BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.xbee/2.5.2-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.xbee.jar" -L "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.xbee/2.5.2-SNAPSHOT/org.openhab.binding.zigbee.xbee-2.5.2-${BUILD_NUMBER}.jar"
                 #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/artifact/bindings/org.openhab.binding.zigbee/org.openhab.binding.zigbee/target/org.openhab.binding.zigbee-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.jar" -L "https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION/%\.0/}/org/openhab/addons/bundles/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee-${OH_VERSION}-SNAPSHOT.jar"
+                #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.jar" -L "https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION/%\.0/}/org/openhab/addons/bundles/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee-${OH_VERSION}-SNAPSHOT.jar"
+                BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee/2.5.2-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.jar" -L "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee/2.5.2-SNAPSHOT/org.openhab.binding.zigbee-2.5.2-${BUILD_NUMBER}.jar"
                 echo " done."
             fi
         fi
@@ -242,7 +258,9 @@ download() {
                 curl -s --connect-timeout 10 --max-time 60 -O -L "http://www.cd-jackson.com/downloads/openhab2/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
             else
                 #curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/artifact/bindings/org.openhab.binding.zwave/target/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
-                curl -s --connect-timeout 10 --max-time 60 -O -L "https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION/%\.0/}/org/openhab/addons/bundles/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
+                #curl -s --connect-timeout 10 --max-time 60 -O -L "https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION/%\.0/}/org/openhab/addons/bundles/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
+                BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zwave/2.5.2-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)
+                curl -s --connect-timeout 10 --max-time 60 -O -L "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zwave/2.5.2-SNAPSHOT/org.openhab.binding.zwave-2.5.2-${BUILD_NUMBER}.jar"
             fi
             echo " done."
         fi
@@ -377,10 +395,10 @@ summary() {
     fi
     echo; echo -e "     ${BLACK_WHITE}*****     SUMMARY     *****${NC}     "; echo
     echo -e "${GREEN_DARK}Addons path:${NC} ${ADDONS}"
-    echo -e "${GREEN_DARK}OpenHAB account:${NC} ${CURRENT_ACCOUNT}"
+    echo -e "${GREEN_DARK}openHAB account:${NC} ${CURRENT_ACCOUNT}"
     echo -e "${GREEN_DARK}Requested action:${NC} ${ACTION}"
     if [[ "${ACTION}" =~ "Install or upgrade" ]]; then
-        echo -e "${GREEN_DARK}Current OpenHAB snapshot version:${NC} ${OH_VERSION}"
+        echo -e "${GREEN_DARK}Current openHAB snapshot version:${NC} ${OH_VERSION}"
     fi
     if [[ ${ACTION} = "Install or upgrade Z-Wave binding" || ${ACTION} = "Install or upgrade both bindings" ]]; then
         echo -e "${GREEN_DARK}Requested Z-Wave version:${NC} ${ZWAVE_VERSION}"
@@ -405,35 +423,35 @@ summary() {
 versions() {
     if [[ ${SILENT} = false ]]; then
         if [[ "${ACTION}" = "Install or upgrade Z-Wave binding" || "${ACTION}" = "Install or upgrade both bindings" ]]; then
-            echo; echo; echo -e "Z-Wave binding: ${GREEN_DARK}Would you like to download the OpenHAB snapshot or development version?${NC}"
+            echo; echo; echo -e "Z-Wave binding: ${GREEN_DARK}Would you like to download the openHAB snapshot or development version?${NC}"
                         echo -e "${BLINKING}!!!!!${GREY_RED} DO NOT select 'Development' unless Chris has specifically instructed you to do so ${BLINKING}!!!!!${NC}"
-            select ZWAVE_VERSION in "OpenHAB snapshot" "Development" "Exit"; do
+            select ZWAVE_VERSION in "openHAB snapshot" "Development" "Exit"; do
                 case $ZWAVE_VERSION in
-                    "OpenHAB snapshot" ) break;;
+                    "openHAB snapshot" ) break;;
                     "Development" ) break;;
                     "Exit" ) exit; break;;
                 esac
             done
         fi
     elif [[ -z "${ZWAVE_VERSION}" ]]; then # not specified as an argument
-        ZWAVE_VERSION="OpenHAB snapshot"
+        ZWAVE_VERSION="openHAB snapshot"
     fi
 
     if [[ ${SILENT} = false ]]; then
         if [[ "${ACTION}" = "Install or upgrade Zigbee binding" || "${ACTION}" = "Install or upgrade both bindings" ]]; then
-            echo; echo; echo -e "Zigbee binding: ${GREEN_DARK}The OpenHAB snapshot binding will be downloaded, but Which libraries would you like to use?${NC}"
+            echo; echo; echo -e "Zigbee binding: ${GREEN_DARK}The openHAB snapshot binding will be downloaded, but which libraries would you like to use?${NC}"
                         echo -e "${BLINKING}!!!!!${GREY_RED} DO NOT select 'ZigBee Library snapshot' unless Chris has specifically instructed you to do so ${BLINKING}!!!!!${NC}"
-            select ZIGBEE_VERSION in "OpenHAB baseline (included in OpenHAB snapshot)" "ZigBee Library release (pre-OpenHAB snapshot)" "ZigBee Library snapshot (still in development)" "Exit"; do
+            select ZIGBEE_VERSION in "openHAB baseline (included in openHAB snapshot)" "ZigBee Library release (pre-openHAB snapshot)" "ZigBee Library snapshot (still in development)" "Exit"; do
                 case $ZIGBEE_VERSION in
-                    "OpenHAB baseline (included in OpenHAB snapshot)" ) break;;
-                    "ZigBee Library release (pre-OpenHAB snapshot)" ) break;;
+                    "openHAB baseline (included in openHAB snapshot)" ) break;;
+                    "ZigBee Library release (pre-openHAB snapshot)" ) break;;
                     "ZigBee Library snapshot (still in development)" ) break;;
                     "Exit" ) exit; break;;
                 esac
             done
         fi
     elif [[ -z "${ZIGBEE_VERSION}" ]]; then # not specified as an argument
-        ZIGBEE_VERSION="OpenHAB baseline (included in OpenHAB snapshot)"
+        ZIGBEE_VERSION="openHAB baseline (included in openHAB snapshot)"
     fi
 
     if [[ "${ACTION}" =~ "Install or upgrade" ]]; then
@@ -443,16 +461,16 @@ versions() {
     fi
 
     if [[ -z "${LIBRARY_VERSION}" && ("${ACTION}" = "Install or upgrade Zigbee binding" || "${ACTION}" = "Install or upgrade both bindings") ]]; then
-        if [[ "${ZIGBEE_VERSION}" = "OpenHAB baseline (included in OpenHAB snapshot)" ]]; then
+        if [[ "${ZIGBEE_VERSION}" = "openHAB baseline (included in openHAB snapshot)" ]]; then
             LIBRARY_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://raw.githubusercontent.com/openhab/openhab-distro/master/features/addons/src/main/feature/feature.xml" | grep -a "com.zsmartsystems.zigbee.dongle.ember" | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
-        elif [[ "${ZIGBEE_VERSION}" = "ZigBee Library release (pre-OpenHAB snapshot)" ]]; then
+        elif [[ "${ZIGBEE_VERSION}" = "ZigBee Library release (pre-openHAB snapshot)" ]]; then
             #LIBRARY_VERSION=$(wget -nv -q -O- "https://bintray.com/zsmartsystems/com.zsmartsystems/zigbee/_latestVersion" | grep -oP "[0-9].*[0-9]$")
             LIBRARY_VERSION=$(curl -Ls --connect-timeout 10 --max-time 10 -o /dev/null -w %{url_effective} "https://bintray.com/zsmartsystems/com.zsmartsystems/zigbee/_latestVersion" | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
         else
             LIBRARY_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+")
         fi
-        if [[ ${SILENT} = false && "${ZIGBEE_VERSION}" != "OpenHAB baseline (included in OpenHAB snapshot)" ]]; then
-            echo; echo; echo -e "${GREEN_DARK}Note: the pre-OpenHAB snapshot Zigbee libraries may not yet be compatible with the current openHAB snapshot Zigbee binding"
+        if [[ ${SILENT} = false && "${ZIGBEE_VERSION}" != "openHAB baseline (included in openHAB snapshot)" ]]; then
+            echo; echo; echo -e "${GREEN_DARK}Note: the pre-openHAB snapshot Zigbee libraries may not yet be compatible with the current openHAB snapshot Zigbee binding"
                         echo -e "or bridges. Enter the requested version of the Zigbee libraries [clear field to exit]${NC}"
             read -e -p "[Use backspace to modify, enter to accept. The latest version is ${LIBRARY_VERSION}.] " -i "${LIBRARY_VERSION}" LIBRARY_VERSION
             if [[ -z "${LIBRARY_VERSION}" ]]; then
