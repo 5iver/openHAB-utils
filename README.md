@@ -6,7 +6,7 @@ Utilities for use with [openHAB](https://www.openhab.org/)
   
 _**NOTE: The development Z-Wave binding has been [merged into the master branch](https://community.openhab.org/t/zwave-binding-updates/51080), so only choose the development branch for Z-Wave if Chris has instructed you to do so (he may throw a test jar out there).**_
 
-  This script is interactive and will prompt for input. It must be copied to, and executed from, the addons directory on the openHAB server, **using the same account that runs openHAB**. 
+  This script is interactive and will prompt for input. It must be copied to, and executed from, [the addons directory](https://www.openhab.org/docs/installation/linux.html#file-locations) on the openHAB server, **using the same account that runs openHAB**. 
   After downloading, be sure to set the permissions so that it can be executed (`chmod u+x zzManualInstaller.sh`), or run it with `bash zzManualInstaller.sh`. 
   If using a package installation (like openHABian), execute the script with `sudo -E -u openhab bash zzManualInstaller.sh`. 
   At this time, there is very little error checking in the case of a failure in the script, so you should verify that it has run successfully when it completes, e.g. run `list -s | grep -i zig` in Karaf. 
