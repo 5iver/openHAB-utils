@@ -74,7 +74,7 @@ https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org
 7. Back in the Karaf console, install the serial transport feature: `feature:install openhab-transport-serial`
 8. Download xstream and copy the jar file to /addons/... 
 ```
-http://central.maven.org/maven2/org/apache/servicemix/bundles/org.apache.servicemix.bundles.xstream/1.4.7_1/org.apache.servicemix.bundles.xstream-1.4.7_1.jar
+https://repo1.maven.org/maven2/org/apache/servicemix/bundles/org.apache.servicemix.bundles.xstream/1.4.7_1/org.apache.servicemix.bundles.xstream-1.4.7_1.jar
 ```
 </ul>
 
