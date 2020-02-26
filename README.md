@@ -54,7 +54,7 @@ Here is how to install/upgrade the development Z-Wave binding from commandline..
 ```
 https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zwave/2.5.2-SNAPSHOT/org.openhab.binding.zwave-2.5.2-${BUILD_NUMBER}.jar
 ```
-6. For Zigbee, download all of these, or just the ones pertinent to your coordinator. Replace all references to `${ZSMARTSYSTEMS_VERSION}` with the current version of the libraries (e.g., 1.2.1), `${OH_VERSION}` with the current snaphsot version of OH (e.g., 2.5.0), `${OH_VERSION_MAJOR_MINOR}` with the current OH Major.Minor version (e.g., 2.5), and `${BUILD_NUMBER}` with the number that will be found by going to the parent page and getting the highest build number on that page.
+6. For Zigbee, download all of these, or just the ones pertinent to your coordinator. Replace all references to `${LIBRARY_VERSION}` with the current version of the libraries (e.g., 1.3.1), `${OH_VERSION}` with the current snapshot version of OH (e.g., 2.5.3), `${OH_VERSION_MAJOR_MINOR}` with the current OH Major.Minor version (e.g., 2.5), and `${BUILD_NUMBER}` with the number that will be found by going to the parent page and getting the highest build number on that page.
 ```
 https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.cc2531/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.dongle.cc2531-${FILE_NAME_VERSION1}.jar
 https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.ember/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.dongle.ember-${FILE_NAME_VERSION2}.jar
