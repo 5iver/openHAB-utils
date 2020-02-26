@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-SCRIPT_VERSION=1.2.4
+SCRIPT_VERSION=1.2.5
 
 GREY_RED='\033[0;37;41m'
 GREEN_DARK='\033[0;32;40m'
@@ -16,10 +16,10 @@ introText() {
           echo -e ${RED_WHITE}"                                                      "
         echo -e ${BLACK_WHITE}"           https://paypal.me/ScottRushworth           "
           echo -e ${RED_WHITE}"                                                      "${NC}
-    echo; echo "Script version: ${SCRIPT_VERSION}"
+                   echo; echo "Script version: ${SCRIPT_VERSION}"
     echo; echo -e "${GREEN_DARK}This script is capable of downloading and manually installing the latest development or snapshot builds of the Z-Wave and Zigbee bindings, and/or the openhab-core-io-transport-serial"
     echo "feature. The script must reside inside the addons folder and be executed on the machine running openHAB. Before a binding is installed, any previous versions will be"
-    echo "uninstalled. Any manually installed versions will also be backed up by moving them to /addons/archive. The installation of any binding will also include the installation"
+    echo "uninstalled. Any manually installed versions will also be backed up by moving them to /addons/archive/. The installation of any binding will also include the installation"
     echo -e "of the openhab-core-io-transport-serial feature. After using this script, you can uninstall the bindings by deleting their jars from addons, or you can use this script.${NC}"
     echo; echo -e "${BLINKING}!!!!!${GREY_RED} If you have manually added the Zigbee or Z-Wave binding to your addons.cfg file, they must be removed from the file or the old version will reinstall ${BLINKING}!!!!!${NC}"
 }
@@ -229,24 +229,34 @@ download() {
                 fi
                 #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.cc2531.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/artifact/bindings/org.openhab.binding.zigbee/org.openhab.binding.zigbee.cc2531/target/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-SNAPSHOT.jar"
                 #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.cc2531.jar" -L "https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION/%\.0/}/org/openhab/addons/bundles/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-SNAPSHOT.jar"
-                BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)
-                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.cc2531.jar" -L "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-${BUILD_NUMBER}.jar"
+                #BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)
+                #echo "OH_VERSION [${OH_VERSION}], BUILD_NUMBER [${BUILD_NUMBER}]"
+                #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.cc2531.jar" -L "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-${BUILD_NUMBER}.jar"
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.cc2531.jar" -L "https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-SNAPSHOT.jar"
                 #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.ember.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/artifact/bindings/org.openhab.binding.zigbee/org.openhab.binding.zigbee.ember/target/org.openhab.binding.zigbee.ember-${OH_VERSION}-SNAPSHOT.jar"
                 #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.ember.jar" -L "https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION/%\.0/}/org/openhab/addons/bundles/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.ember-${OH_VERSION}-SNAPSHOT.jar"
-                BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)
-                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.ember.jar" -L "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.ember-${OH_VERSION}-${BUILD_NUMBER}.jar"
+                #BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)
+                #echo "OH_VERSION [${OH_VERSION}], BUILD_NUMBER [${BUILD_NUMBER}]"
+                #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.ember.jar" -L "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.ember-${OH_VERSION}-${BUILD_NUMBER}.jar"
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.ember.jar" -L "https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.ember-${OH_VERSION}-SNAPSHOT.jar"
                 #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.telegesis.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/artifact/bindings/org.openhab.binding.zigbee/org.openhab.binding.zigbee.telegesis/target/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-SNAPSHOT.jar"
                 #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.telegesis.jar" -L "https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION/%\.0/}/org/openhab/addons/bundles/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-SNAPSHOT.jar"
-                BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)
-                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.telegesis.jar" -L "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-${BUILD_NUMBER}.jar"
+                #BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)
+                #echo "OH_VERSION [${OH_VERSION}], BUILD_NUMBER [${BUILD_NUMBER}]"
+                #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.telegesis.jar" -L "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-${BUILD_NUMBER}.jar"
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.telegesis.jar" -L "https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-SNAPSHOT.jar"
                 #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.xbee.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/artifact/bindings/org.openhab.binding.zigbee/org.openhab.binding.zigbee.xbee/target/org.openhab.binding.zigbee.xbee-${OH_VERSION}-SNAPSHOT.jar"
                 #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.xbee.jar" -L "https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION/%\.0/}/org/openhab/addons/bundles/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.xbee-${OH_VERSION}-SNAPSHOT.jar"
-                BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)
-                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.xbee.jar" -L "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.xbee-${OH_VERSION}-${BUILD_NUMBER}.jar"
+                #BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)
+                #echo "OH_VERSION [${OH_VERSION}], BUILD_NUMBER [${BUILD_NUMBER}]"
+                #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.xbee.jar" -L "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.xbee-${OH_VERSION}-${BUILD_NUMBER}.jar"
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.xbee.jar" -L "https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zigbee.xbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.xbee-${OH_VERSION}-SNAPSHOT.jar"
                 #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.jar" -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/artifact/bindings/org.openhab.binding.zigbee/org.openhab.binding.zigbee/target/org.openhab.binding.zigbee-${OH_VERSION}-SNAPSHOT.jar"
                 #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.jar" -L "https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION/%\.0/}/org/openhab/addons/bundles/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee-${OH_VERSION}-SNAPSHOT.jar"
-                BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)
-                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.jar" -L "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee-${OH_VERSION}-${BUILD_NUMBER}.jar"
+                #BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)
+                #echo "OH_VERSION [${OH_VERSION}], BUILD_NUMBER [${BUILD_NUMBER}]"
+                #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.jar" -L "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee-${OH_VERSION}-${BUILD_NUMBER}.jar"
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.jar" -L "https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zigbee/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee-${OH_VERSION}-SNAPSHOT.jar"
                 echo " done."
             fi
         fi
@@ -259,8 +269,10 @@ download() {
             else
                 #curl -s --connect-timeout 10 --max-time 60 -O -L "https://ci.openhab.org/job/openHAB2-Bundles/lastSuccessfulBuild/artifact/bindings/org.openhab.binding.zwave/target/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
                 #curl -s --connect-timeout 10 --max-time 60 -O -L "https://openhab.jfrog.io/openhab/online-repo-snapshot/${OH_VERSION/%\.0/}/org/openhab/addons/bundles/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
-                BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)
-                curl -s --connect-timeout 10 --max-time 60 -O -L "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-${OH_VERSION}-${BUILD_NUMBER}.jar"
+                #BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)
+                #echo "OH_VERSION [${OH_VERSION}], BUILD_NUMBER [${BUILD_NUMBER}]"
+                #curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zwave.jar" -L "https://openhab.jfrog.io/openhab/sandbox-snapshot/org/openhab/addons/bundles/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-${OH_VERSION}-${BUILD_NUMBER}.jar"
+                curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zwave.jar" -L "https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-${OH_VERSION}-SNAPSHOT.jar"
             fi
             echo " done."
         fi
@@ -393,6 +405,12 @@ summary() {
     if [[ ${SILENT} = false ]]; then
         clear;
     fi
+    echo; echo -e ${RED_WHITE}"                                                      "
+          echo -e ${RED_WHITE}"          Like this script?  I like BEER!!!!          "
+          echo -e ${RED_WHITE}"                                                      "
+        echo -e ${BLACK_WHITE}"           https://paypal.me/ScottRushworth           "
+          echo -e ${RED_WHITE}"                                                      "${NC}
+                   echo; echo "Script version: ${SCRIPT_VERSION}"
     echo; echo -e "     ${BLACK_WHITE}*****     SUMMARY     *****${NC}     "; echo
     echo -e "${GREEN_DARK}Addons path:${NC} ${ADDONS}"
     echo -e "${GREEN_DARK}openHAB account:${NC} ${CURRENT_ACCOUNT}"
