@@ -209,6 +209,7 @@ download() {
             cd ${ADDONS}/archive/staging/zigbee
 
             curl -s --connect-timeout 10 --max-time 60 -O -L "https://repo1.maven.org/maven2/commons-cli/commons-cli/1.4/commons-cli-1.4.jar"
+            curl -s --connect-timeout 10 --max-time 60 -O -L "https://repo1.maven.org/maven2/org/scream3r/jssc/2.8.0/jssc-2.8.0.jar"
 
             if [[ "${ZIGBEE_VERSION}" =~ "ZigBee Library snapshot (still in development)" ]]; then
                 FILE_NAME_VERSION1=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
