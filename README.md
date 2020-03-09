@@ -58,9 +58,11 @@ https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/
 ```
 https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee-${ZSMARTSYSTEMS_VERSION}.jar
 https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.xbee/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.xbee-${ZSMARTSYSTEMS_VERSION}.jar
+https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.conbee/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.conbee-${ZSMARTSYSTEMS_VERSION}.jar
 https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.ember/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.ember-${ZSMARTSYSTEMS_VERSION}.jar
 https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.telegesis/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.telegesis-${ZSMARTSYSTEMS_VERSION}.jar
 https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.cc2531/${ZSMARTSYSTEMS_VERSION}/com.zsmartsystems.zigbee.dongle.cc2531-${ZSMARTSYSTEMS_VERSION}.jar
+
 https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.cc2531-${OH_VERSION}-${BUILD_NUMBER}.jar
 https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zigbee.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.ember-${OH_VERSION}-${BUILD_NUMBER}.jar
 https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zigbee.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.telegesis-${OH_VERSION}-${BUILD_NUMBER}.jar
@@ -69,11 +71,26 @@ https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/
 https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zigbee.console/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.console-${OH_VERSION}-${BUILD_NUMBER}.jar
 https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zigbee.console.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.console.ember-${OH_VERSION}-${BUILD_NUMBER}.jar
 https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zigbee.console.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.console.telegesis-${OH_VERSION}-${BUILD_NUMBER}.jar
+
+https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console/${LIBRARY_VERSION}/com.zsmartsystems.zigbee.console-${LIBRARY_VERSION}.jar
+https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console.main/${LIBRARY_VERSION}/com.zsmartsystems.zigbee.console.main-${LIBRARY_VERSION}.jar
+https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console.ember/${LIBRARY_VERSION}/com.zsmartsystems.zigbee.console.ember-${LIBRARY_VERSION}.jar
+https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console.telegesis/${LIBRARY_VERSION}/com.zsmartsystems.zigbee.console.telegesis-${LIBRARY_VERSION}.jar
+https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.serial/${LIBRARY_VERSION}/com.zsmartsystems.zigbee.serial-${LIBRARY_VERSION}.jar
+
+https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zigbee.console/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.console-${OH_VERSION}-${BUILD_NUMBER}.jar
+https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zigbee.console.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.console.ember-${OH_VERSION}-${BUILD_NUMBER}.jar
+https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zigbee.console.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.console.telegesis-${OH_VERSION}-${BUILD_NUMBER}.jar
 ```
 7. Back in the Karaf console, install the serial transport feature: `feature:install openhab-transport-serial`
-8. Download xstream and copy the jar file to /addons/... 
+8. For both Z-Wave and Zigbee, download xstream and copy the jar file to /addons/... 
 ```
 https://repo1.maven.org/maven2/org/apache/servicemix/bundles/org.apache.servicemix.bundles.xstream/1.4.7_1/org.apache.servicemix.bundles.xstream-1.4.7_1.jar
+```
+9. For Zigbee, download commons-cli and scream3r, and copy the jar files to /addons/...
+```
+https://repo1.maven.org/maven2/commons-cli/commons-cli/1.4/commons-cli-1.4.jar
+https://repo1.maven.org/maven2/org/scream3r/jssc/2.8.0/jssc-2.8.0.jar
 ```
 </ul>
 
