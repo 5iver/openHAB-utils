@@ -44,13 +44,13 @@ Here is how to install/upgrade the development Z-Wave binding from commandline..
     bash zzManualInstaller.sh --ACTION zwave --ZWAVE_BRANCH development
 
 
-**Here are the steps this script performs, and which you could choose to do manually**
+Here are the steps this script performs and could be used to install or upgrade the bindings manually by hand.
 
 1. Access the Karaf console
 2. Check for previously installed versions of the bindings... `list -s | grep zwave` or `list -s | grep zigbee`
-3. Uninstall any previously installed versions of the bindings... `bundle:uninstall org.openhab.binding.zwave` or `bundle:uninstall org.openhab.binding.zigbee`. This may need to be repeated, if multiple versions have been installed. Also, remove zwave and zigbee from the addons.cfg, if you've previously added it there.
+3. Uninstall any previously installed versions of the bindings... `bundle:uninstall org.openhab.binding.zwave` and/or `bundle:uninstall org.openhab.binding.zigbee`. This may need to be repeated, if multiple versions have been installed. Also, remove `zwave` and `zigbee` from the addons.cfg, if you've previously added it there.
 4. Remove any Zigbee or Z-Wave jar files in the `/addons/` directory.
-5. Download the Z-Wave jar and save to `/addons/`. The reference to `${BUILD_NUMBER}` should be replaced with the number that will be found by going to the parent page and getting the highest build number on that page.
+5. Download the Z-Wave jar and save to `/addons/`. The reference to `${OH_VERSION}` should be replaced with the newest version of OH snapshot listed [here](https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zwave) that fits your major version of OH. The reference to `${BUILD_NUMBER}` should be replaced with the number that will be found by going to the parent page and getting the highest build number on that page. 
 ```
 https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zwave/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zwave-${OH_VERSION}-${BUILD_NUMBER}.jar
 ```
