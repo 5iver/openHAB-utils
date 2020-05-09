@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-SCRIPT_VERSION=1.2.7
+SCRIPT_VERSION=1.2.8
 
 GREY_RED='\033[0;37;41m'
 GREEN_DARK='\033[0;32;40m'
@@ -21,7 +21,7 @@ introText() {
     echo "feature. The script must reside inside the addons folder and be executed on the machine running openHAB. Before a binding is installed, any previous versions will be"
     echo "uninstalled. Any manually installed versions will also be backed up by moving them to /addons/archive/. The installation of any binding will also include the installation"
     echo -e "of the openhab-core-io-transport-serial feature. After using this script, you can uninstall the bindings by deleting their jars from addons, or you can use this script.${NC}"
-    echo; echo -e "${BLINKING}!!!!!${GREY_RED} If you have manually added the Zigbee or Z-Wave binding to your addons.cfg file, they must be removed from the file or the old version will reinstall ${BLINKING}!!!!!${NC}"
+    #echo; echo -e "${BLINKING}!!!!!${GREY_RED} If you have manually added the Zigbee or Z-Wave binding to your addons.cfg file, they must be removed from the file or the old version will reinstall ${BLINKING}!!!!!${NC}"
 }
 for WORD; do
     ARGUMENT=${WORD^^}
@@ -159,7 +159,7 @@ install() {
                 #elif [[ ${COUNT} -lt 24 ]]; then
                     #echo "DEBUG: Z-Wave ${ZIGBEE_CHECK}"
                 elif [[ ${COUNT} -eq 24 ]]; then
-                    echo; echo -e "${BLINKING}!!!!!${GREY_RED} It has taken more than two minutes to install the Zigbee binding, so exiting ${BLINKING}!!!!!${NC}"; echo
+                    echo; echo -e "${BLINKING}!!!!!${GREY_RED} It has taken more than two minutes to install the Zigbee binding, so exiting... try again or restart openHAB ${BLINKING}!!!!!${NC}"; echo
                     exit
                 #else
                     #echo "DEBUG: Zigbee wait count: ${COUNT}, ZIGBEE_CHECK=${ZIGBEE_CHECK}"
@@ -175,7 +175,7 @@ install() {
                 #elif [[ ${COUNT} -lt 24 ]]; then
                     #echo "DEBUG: Z-Wave ${ZWAVE_CHECK}"
                 elif [[ ${COUNT} -eq 24 ]]; then
-                    echo; echo -e "${BLINKING}!!!!!${GREY_RED} It has taken more than two minutes to install the Z-Wave binding, so exiting ${BLINKING}!!!!!${NC}"; echo
+                    echo; echo -e "${BLINKING}!!!!!${GREY_RED} It has taken more than two minutes to install the Z-Wave binding, so exiting... try again or restart openHAB ${BLINKING}!!!!!${NC}"; echo
                     exit
                 #else
                     #echo "DEBUG: Z-Wave wait count: ${COUNT}, ZWAVE_CHECK=${ZWAVE_CHECK}"
@@ -208,40 +208,40 @@ download() {
             mkdir -p ${ADDONS}/archive/staging/zigbee
             cd ${ADDONS}/archive/staging/zigbee
 
-            curl -s --connect-timeout 10 --max-time 60 -O -L "https://repo1.maven.org/maven2/commons-cli/commons-cli/1.4/commons-cli-1.4.jar"
-            curl -s --connect-timeout 10 --max-time 60 -O -L "https://repo1.maven.org/maven2/org/scream3r/jssc/2.8.0/jssc-2.8.0.jar"
+            #curl -s --connect-timeout 10 --max-time 60 -O -L "https://repo1.maven.org/maven2/commons-cli/commons-cli/1.4/commons-cli-1.4.jar"
+            #curl -s --connect-timeout 10 --max-time 60 -O -L "https://repo1.maven.org/maven2/org/scream3r/jssc/2.8.0/jssc-2.8.0.jar"
 
             if [[ "${ZIGBEE_VERSION}" =~ "ZigBee Library snapshot (still in development)" ]]; then
-                FILE_NAME_VERSION1=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
-                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.console.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.console-${FILE_NAME_VERSION1}.jar"
-                FILE_NAME_VERSION1=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console.main/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
-                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.console.main.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console.main/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.console.main-${FILE_NAME_VERSION1}.jar"
-                FILE_NAME_VERSION1=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console.ember/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
-                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.console.ember.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console.ember/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.console.ember-${FILE_NAME_VERSION1}.jar"
-                FILE_NAME_VERSION1=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console.telegesis/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
-                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.console.telegesis.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console.telegesis/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.console.telegesis-${FILE_NAME_VERSION1}.jar"
-                FILE_NAME_VERSION1=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.serial/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
-                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.serial.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.serial/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.serial-${FILE_NAME_VERSION1}.jar"
+                FILE_NAME_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
+                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.console.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.console-${FILE_NAME_VERSION}.jar"
+                #FILE_NAME_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console.main/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
+                #curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.console.main.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console.main/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.console.main-${FILE_NAME_VERSION}.jar"
+                FILE_NAME_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console.ember/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
+                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.console.ember.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console.ember/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.console.ember-${FILE_NAME_VERSION}.jar"
+                FILE_NAME_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console.telegesis/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
+                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.console.telegesis.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console.telegesis/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.console.telegesis-${FILE_NAME_VERSION}.jar"
+                #FILE_NAME_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.serial/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
+                #curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.serial.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.serial/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.serial-${FILE_NAME_VERSION}.jar"
 
-                FILE_NAME_VERSION1=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.cc2531/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
-                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.cc2531.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.cc2531/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.dongle.cc2531-${FILE_NAME_VERSION1}.jar"
-                FILE_NAME_VERSION2=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.ember/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
-                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.ember.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.ember/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.dongle.ember-${FILE_NAME_VERSION2}.jar"
-                FILE_NAME_VERSION3=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.telegesis/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
-                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.telegesis.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.telegesis/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.dongle.telegesis-${FILE_NAME_VERSION3}.jar"
-                FILE_NAME_VERSION4=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.xbee/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
-                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.xbee.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.xbee/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.dongle.xbee-${FILE_NAME_VERSION4}.jar"
-                FILE_NAME_VERSION1=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.conbee/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
-                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.conbee.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.conbee/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.dongle.conbee-${FILE_NAME_VERSION1}.jar"
+                FILE_NAME_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.cc2531/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
+                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.cc2531.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.cc2531/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.dongle.cc2531-${FILE_NAME_VERSION}.jar"
+                FILE_NAME_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.ember/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
+                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.ember.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.ember/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.dongle.ember-${FILE_NAME_VERSION}.jar"
+                FILE_NAME_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.telegesis/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
+                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.telegesis.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.telegesis/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.dongle.telegesis-${FILE_NAME_VERSION}.jar"
+                FILE_NAME_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.xbee/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
+                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.xbee.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.xbee/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.dongle.xbee-${FILE_NAME_VERSION}.jar"
+                FILE_NAME_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.conbee/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
+                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.conbee.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.conbee/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee.dongle.conbee-${FILE_NAME_VERSION}.jar"
 
-                FILE_NAME_VERSION5=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
-                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee-${FILE_NAME_VERSION5}.jar"
+                FILE_NAME_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee/${LIBRARY_VERSION}-SNAPSHOT/maven-metadata.xml" | grep -aoP -m1 "[0-9]+\.[0-9]+\.[0-9]+-[0-9]+.[0-9]+-[0-9]+")
+                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.jar" -L "https://oss.jfrog.org/artifactory/oss-snapshot-local/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee/${LIBRARY_VERSION}-SNAPSHOT/com.zsmartsystems.zigbee-${FILE_NAME_VERSION}.jar"
             else
                 curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.console.jar" -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console/${LIBRARY_VERSION}/com.zsmartsystems.zigbee.console-${LIBRARY_VERSION}.jar"
-                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.console.main.jar" -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console.main/${LIBRARY_VERSION}/com.zsmartsystems.zigbee.console.main-${LIBRARY_VERSION}.jar"
+                #curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.console.main.jar" -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console.main/${LIBRARY_VERSION}/com.zsmartsystems.zigbee.console.main-${LIBRARY_VERSION}.jar"
                 curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.console.ember.jar" -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console.ember/${LIBRARY_VERSION}/com.zsmartsystems.zigbee.console.ember-${LIBRARY_VERSION}.jar"
                 curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.console.telegesis.jar" -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.console.telegesis/${LIBRARY_VERSION}/com.zsmartsystems.zigbee.console.telegesis-${LIBRARY_VERSION}.jar"
-                curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.serial.jar" -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.serial/${LIBRARY_VERSION}/com.zsmartsystems.zigbee.serial-${LIBRARY_VERSION}.jar"
+                #curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.serial.jar" -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.serial/${LIBRARY_VERSION}/com.zsmartsystems.zigbee.serial-${LIBRARY_VERSION}.jar"
                 
                 curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.cc2531.jar" -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.cc2531/${LIBRARY_VERSION}/com.zsmartsystems.zigbee.dongle.cc2531-${LIBRARY_VERSION}.jar"
                 curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.ember.jar" -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.ember/${LIBRARY_VERSION}/com.zsmartsystems.zigbee.dongle.ember-${LIBRARY_VERSION}.jar"
@@ -250,8 +250,13 @@ download() {
                 curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.dongle.conbee.jar" -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee.dongle.conbee/${LIBRARY_VERSION}/com.zsmartsystems.zigbee.dongle.conbee-${LIBRARY_VERSION}.jar"
                 curl -s --connect-timeout 10 --max-time 60 -o "com.zsmartsystems.zigbee.jar" -L "https://dl.bintray.com/zsmartsystems/com.zsmartsystems/com/zsmartsystems/zigbee/com.zsmartsystems.zigbee/${LIBRARY_VERSION}/com.zsmartsystems.zigbee-${LIBRARY_VERSION}.jar"
             fi
+            BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zigbee.console/${OH_VERSION}-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)            
             curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.console.jar" -L "https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zigbee.console/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.console-${OH_VERSION}-${BUILD_NUMBER}.jar"
+
+            BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zigbee.console.ember/${OH_VERSION}-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)
             curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.console.ember.jar" -L "https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zigbee.console.ember/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.console.ember-${OH_VERSION}-${BUILD_NUMBER}.jar"
+
+            BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zigbee.console.telegesis/${OH_VERSION}-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)
             curl -s --connect-timeout 10 --max-time 60 -o "org.openhab.binding.zigbee.console.telegesis.jar" -L "https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zigbee.console.telegesis/${OH_VERSION}-SNAPSHOT/org.openhab.binding.zigbee.console.telegesis-${OH_VERSION}-${BUILD_NUMBER}.jar"
             
             BUILD_NUMBER=$(curl -s --connect-timeout 10 --max-time 10 "https://openhab.jfrog.io/openhab/libs-snapshot-local/org/openhab/addons/bundles/org.openhab.binding.zigbee.cc2531/${OH_VERSION}-SNAPSHOT/" | tail -n 4 | grep -aoP -m 1 "[0-9]{8}\.[0-9]+\-[0-9]+" | head -1)
@@ -365,7 +370,7 @@ uninstall() {
         if [[ "${ACTION}" =~ "Uninstall" ]]; then
             echo; echo -e ${GREEN_DARK}"If the org.apache.servicemix.bundles.xstream-1.4.7_1.jar is no longer required by any of your other manually installed bindings, you can remove it"${NC}
             if [[ "${ACTION}" =~ "Zigbee" ]]; then
-                echo; echo -e ${GREEN_DARK}"If the commons-cli-1.4.jar and org.everit.osgi.bundles.org.scream3r.jssc-2.8.0.jar are no longer required by any of your other manually installed bindings, you can remove it"${NC}
+                echo; echo -e ${GREEN_DARK}"If the commons-cli-1.4.jar and org.everit.osgi.bundles.org.scream3r.jssc-2.8.0.jar are no longer required by any of your other manually installed bindings, you can remove them"${NC}
             fi
         fi
     fi
@@ -458,7 +463,7 @@ versions() {
     if [[ ${SILENT} = false ]]; then
         if [[ "${ACTION}" = "Install or upgrade Z-Wave binding" || "${ACTION}" = "Install or upgrade both bindings" ]]; then
             echo; echo; echo -e "Z-Wave binding: ${GREEN_DARK}Would you like to download the openHAB snapshot or development version?${NC}"
-                        echo -e "${BLINKING}!!!!!${GREY_RED} DO NOT select 'Development' unless Chris has specifically instructed you to do so ${BLINKING}!!!!!${NC}"
+                        echo -e "${BLINKING}!!!!!${GREY_RED} DO NOT select '2) Development' unless Chris has specifically instructed you to do so ${BLINKING}!!!!!${NC}"
             select ZWAVE_VERSION in "openHAB snapshot" "Development" "Exit"; do
                 case $ZWAVE_VERSION in
                     "openHAB snapshot" ) break;;
@@ -474,7 +479,7 @@ versions() {
     if [[ ${SILENT} = false ]]; then
         if [[ "${ACTION}" = "Install or upgrade Zigbee binding" || "${ACTION}" = "Install or upgrade both bindings" ]]; then
             echo; echo; echo -e "Zigbee binding: ${GREEN_DARK}The openHAB snapshot binding will be downloaded, but which libraries would you like to use?${NC}"
-                        echo -e "${BLINKING}!!!!!${GREY_RED} DO NOT select 'ZigBee Library snapshot' unless Chris has specifically instructed you to do so ${BLINKING}!!!!!${NC}"
+                        echo -e "${BLINKING}!!!!!${GREY_RED} DO NOT select '3) ZigBee Library snapshot' unless Chris has specifically instructed you to do so ${BLINKING}!!!!!${NC}"
             select ZIGBEE_VERSION in "openHAB baseline (included in openHAB snapshot)" "ZigBee Library release (pre-openHAB snapshot)" "ZigBee Library snapshot (still in development)" "Exit"; do
                 case $ZIGBEE_VERSION in
                     "openHAB baseline (included in openHAB snapshot)" ) break;;
@@ -496,7 +501,8 @@ versions() {
 
     if [[ -z "${LIBRARY_VERSION}" && ("${ACTION}" = "Install or upgrade Zigbee binding" || "${ACTION}" = "Install or upgrade both bindings") ]]; then
         if [[ "${ZIGBEE_VERSION}" = "openHAB baseline (included in openHAB snapshot)" ]]; then
-            LIBRARY_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://raw.githubusercontent.com/openhab/openhab-distro/master/features/addons/src/main/feature/feature.xml" | grep -a "com.zsmartsystems.zigbee.dongle.ember" | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
+            #LIBRARY_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://raw.githubusercontent.com/openhab/openhab-distro/master/features/addons/src/main/feature/feature.xml" | grep -a "com.zsmartsystems.zigbee.dongle.ember" | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
+            LIBRARY_VERSION=$(curl -s --connect-timeout 10 --max-time 10 "https://raw.githubusercontent.com/openhab/org.openhab.binding.zigbee/2.5.x/pom.xml" | grep -a "<zsmartsystems.version>" | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
         elif [[ "${ZIGBEE_VERSION}" = "ZigBee Library release (pre-openHAB snapshot)" ]]; then
             #LIBRARY_VERSION=$(wget -nv -q -O- "https://bintray.com/zsmartsystems/com.zsmartsystems/zigbee/_latestVersion" | grep -oP "[0-9].*[0-9]$")
             LIBRARY_VERSION=$(curl -Ls --connect-timeout 10 --max-time 10 -o /dev/null -w %{url_effective} "https://bintray.com/zsmartsystems/com.zsmartsystems/zigbee/_latestVersion" | grep -aoP "[0-9]+\.[0-9]+\.[0-9]+")
